@@ -1,0 +1,105 @@
+* {
+    font-family: 'PT Sans', sans-serif;
+}
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #255555;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-item {
+    display: flex;
+    align-items: center;
+    margin-left: 250px;
+}
+
+.logo-text {
+    margin-left: 10px;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 10px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar li {
+    margin-right: 20px;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #fff;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand img {
+    width: 30px;
+    margin-right: 5px;
+    animation: spin 2s linear infinite;
+}
+
+.navbar a:hover,
+.navbar .active:focus,
+.navbar li:hover>a {
+    color: #d9534f;
+}
+
+.navbar a i,
+.navbar a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+}
+
+.navbar-brand {
+    display: flex;
+    /* Menggunakan properti flexbox untuk mengatur tata letak elemen-elemen dalam navbar */
+    justify-content: space-between;
+    /* Mengatur jarak antara logo dan menu navbar */
+    align-items: center;
+    /* Mengatur elemen-elemen navbar untuk berada di tengah secara vertikal */
+}
+
+.navbar-menu {
+    display: flex;
+    /* Menggunakan properti flexbox untuk mengatur tata letak menu navbar */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-menu li {
+    margin-left: 20px;
+    /* Atur margin kiri pada item-item menu navbar */
+}
