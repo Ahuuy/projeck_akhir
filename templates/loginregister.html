@@ -46,8 +46,62 @@
           label.show();
         }
       });
-    });
+      // Registrasi
+      $('#signup-form').submit(function (e) {
+        e.preventDefault();
+        var email = $('#email').val();
 
+        // Cek email terlebih dahulu sebelum mengirim permintaan
+        checkEmail(email);
+      });
+
+      // Fungsi untuk memeriksa email menggunakan AJAX
+      function checkEmail(email) {
+        $.ajax({
+          url: '/check-email',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ email: email }),
+          success: function (response) {
+            if (response.exists) {
+              alert('Email sudah terdaftar');
+            } else {
+              // Email tidak terdaftar, lanjutkan registrasi
+              // Panggil fungsi registerUser() di sini
+              registerUser();
+            }
+          },
+          error: function (error) {
+            alert('Terjadi kesalahan saat memeriksa email');
+          }
+        });
+      }
+
+      // Fungsi untuk melakukan registrasi setelah validasi email
+      function registerUser() {
+        var data = {
+          first_name: $('#first_name').val(),
+          last_name: $('#last_name').val(),
+          email: $('#email').val(),
+          password: $('#pass').val()
+        };
+
+        $.ajax({
+          url: '/signup',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function (response) {
+            alert('Registrasi berhasil');
+            // Redirect ke halaman login
+            $('a[href="#login"]').click();
+          },
+          error: function (error) {
+            alert('Registrasi gagal');
+          }
+        });
+      }
+    });
 
   </script>
 </head>
@@ -64,21 +118,21 @@
       <div id="signup">
         <h1>Sign Up</h1>
 
-        <form action="/login" method="post">
+        <form action="/login" method="post" id="signup-form">
 
           <div class="top-row">
             <div class="field-wrap">
               <label>
                 First Name<span class="req">*</span>
               </label>
-              <input type="text" required autocomplete="off" />
+              <input id="first_name" type="text" required autocomplete="off" />
             </div>
 
             <div class="field-wrap">
               <label>
                 Last Name<span class="req">*</span>
               </label>
-              <input type="text" required autocomplete="off" />
+              <input id="last_name" type="text" required autocomplete="off" />
             </div>
           </div>
 
@@ -86,17 +140,17 @@
             <label>
               Email Address<span class="req">*</span>
             </label>
-            <input type="email" required autocomplete="off" />
+            <input id="email" type="email" required autocomplete="off" />
           </div>
 
           <div class="field-wrap">
             <label>
               Set A Password<span class="req">*</span>
             </label>
-            <input type="password" required autocomplete="off" />
+            <input id="pass" type="password" required autocomplete="off" />
           </div>
 
-          <button type="submit" class="button button-block" />Register</button>
+          <button type="submit" class="button button-block">Register</button>
 
         </form>
 
@@ -105,20 +159,20 @@
       <div id="login">
         <h1>Welcome Back!</h1>
 
-        <form action="/" method="post">
+        <form action="/" method="post" id="login-form">
 
           <div class="field-wrap">
             <label>
               Email Address<span class="req">*</span>
             </label>
-            <input type="email" required autocomplete="off" />
+            <input id="mail" type="email" required autocomplete="off" />
           </div>
 
           <div class="field-wrap">
             <label>
               Password<span class="req">*</span>
             </label>
-            <input type="password" required autocomplete="off" />
+            <input id="password" type="password" required autocomplete="off" />
           </div>
 
           <p class="forgot"><a href="#">Forgot Password?</a></p>
