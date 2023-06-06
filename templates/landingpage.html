@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+    <!-- link jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <!-- Link Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +23,22 @@
         crossorigin="anonymous"></script>
     <!-- Link CSS -->
     <link href="{{ url_for('static', filename='landingpage.css') }}" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            var navbar = $('.navbar');
+            var navbarHeight = navbar.outerHeight();
+            var scrollOffset = navbarHeight + 20;
+
+            $(window).scroll(function () {
+                if ($(this).scrollTop() >= scrollOffset) {
+                    navbar.addClass('fixed');
+                } else {
+                    navbar.removeClass('fixed');
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
