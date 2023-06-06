@@ -7,136 +7,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <!-- link jquery -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"
-        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
     <!-- Link Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
     <!-- Link CDN Boostrap -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- Link FA -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
     <!-- Link CSS -->
     <link href="{{ url_for('static', filename='landingpage.css') }}" rel="stylesheet" />
-
-    <script>
-        $(document).ready(function () {
-            var navbar = $('.navbar');
-            var navbarHeight = navbar.outerHeight();
-            var scrollOffset = navbarHeight + 20;
-
-            $(window).scroll(function () {
-                if ($(this).scrollTop() >= scrollOffset) {
-                    navbar.addClass('fixed');
-                } else {
-                    navbar.removeClass('fixed');
-                }
-            });
-        });
-    </script>
 </head>
 
 <body>
+
     <!-- Navigation -->
-    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <img src="{{ url_for('static', filename='logo.jpeg') }}" />
-                <strong class="is-sparta logo-text">PPDB ONLINE</strong>
-            </a>
-            <ul class="navbar-menu">
-                <li><a class="nav-link scrollto active" href="#alur">Alur</a></li>
-                <li><a class="nav-link scrollto" href="#info">Info</a></li>
-                <li><a class="nav-link scrollto" href="#hobi">Syarat</a></li>
-                <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
-            </ul>
-            <i class="bi bi-list mobile-nav-toggle"></i>
+    <nav class="navbar navbar-expand-lg rounded fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
+                aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+                <a class="navbar-brand col-lg-3 me-0" href="/">
+                    <img src="{{ url_for('static', filename='logo.jpeg') }}" style="width: 45px; height:45px" />
+                    <span class="fs-4 nav-font" style="font-weight:bold; color: white;">PPDB Santri</span>
+                </a>
+                <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#info">Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#syarat">Syarat</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Kontak</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <!-- .navbar -->
 
-
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <img class="img-responsive" src="static/logo.jpeg" style="margin-top:1%;margin-bottom:-10px;"
-                        width="100">
-                    <br><br>
-                    <div class="intro-text">
-                        <span class="name shad" style="font-size: 35px;line-height: 35px;color: #fff;
-                        font-weight: bold;">
-                            SELAMAT DATANG DI PPDB ONLINE <br>PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
-                            SHOLIHIN</span>
-                        <br>
-                        <span>
-                            <a href="login" class="btn btn-warning" style="margin: 5px; border-radius: 6px;">
-                                <i class="fa fa-list faa-pulse"></i> &nbsp;
-                                <b>ADMIN</b>
-                            </a>
-                            <a href="login" class="btn btn-danger" style="margin: 5px; border-radius: 6px;">
-                                <i class="fa fa-sign-in faa-pulse"></i> &nbsp;
-                                <b>CALON SISWA</b></a>
-                            <br>
-                        </span>
-                    </div>
+    <!-- Carousel -->
+    <div id="carouselExampleCaptions" class="carousel slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="static/foto1.jpeg" class="d-block w-100" alt="Gambar1" id="carouselfoto">
+            </div>
+            <div class="carousel-item">
+                <img src="static/foto2.jpeg" class="d-block w-100" alt="Gambar2" id="carouselfoto">
+            </div>
+            <div class="carousel-item">
+                <img src="static/foto3.jpeg" class="d-block w-100" alt="Gambar3" id="carouselfoto">
+                <div class="carousel-caption">
+                    <h1><b>Pendaftaran Santri Baru</b></h1>
+                    <p><b>PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
+                            SHOLIHIN</b></p>
+                    <p>
+                        <a class="btn btn-lg btn-danger" href="login">
+                            <i class="fa fa-graduation-cap"> &nbsp;
+                                <b>DAFTAR</b>
+                            </i>
+                        </a>
+                    </p>
                 </div>
-                <marquee scrollamount="25">
-                    <font size="4" color="yellow"><b> [INFORMASI PENTING]</b> </font>
-                </marquee>
-                <marquee scrollamount="5">
-                    <font size="4" color="white"> Orang Tua/ Wali Santri Santri Baru Wajib Mengikuti Kegiatan
-                        Sosialisasi Program Pondok Pesantren Nazhatut Thullab</font>
-                </marquee>
-                <marquee scrollamount="5">
-                    <font size="4" color="white"> ---------------- Pada Tanggal <font color="yellow">16 Juli 2023
-                            Pukul 10.00 WIB <font color="white">Di Pondok Pesantren Nazhatut Thullab
-                                ---------------- </font>
-                        </font>
-                    </font>
-                </marquee>
             </div>
         </div>
-    </header>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- End Carousel -->
 
-
+    <!-- Heroes -->
+    <div class="px-4 py-5 my-5 text-center">
+        <img class="d-block mx-auto mb-4" src="static/logo.jpeg" alt="logo" style="margin-top:1%;margin-bottom:-10px;"
+            width="100">
+        <span class="name shad" style="font-size: 35px;line-height: 35px;color: #fff;
+                        font-weight: bold;">
+            SELAMAT DATANG DI PPDB ONLINE <br>PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN <br> RIYADHUS
+            SHOLIHIN</span>
+        <div class="col-lg-6 mx-auto">
+            <br>
+            <span>
+                <a href="login" class="btn btn-warning" style="margin: 5px; border-radius: 6px;">
+                    <i class="fa fa-list faa-pulse"></i> &nbsp;
+                    <b>ADMIN</b>
+                </a>
+                <a href="login" class="btn btn-danger" style="margin: 5px; border-radius: 6px;">
+                    <i class="fa fa-sign-in faa-pulse"></i> &nbsp;
+                    <b>CALON SISWA</b></a>
+                <br>
+            </span>
+        </div>
+        <marquee scrollamount="25">
+            <font size="4" color="yellow"><b> [INFORMASI PENTING]</b> </font>
+        </marquee>
+        <marquee scrollamount="5">
+            <font size="4" color="white">Pendaftaran Santri Baru Akan Segara Di Tutup</font>
+        </marquee>
+        <marquee scrollamount="5">
+            <font size="4" color="white"> ---------------- Pada Tanggal <font color="yellow">30 Juni 2023 <font color="white">Di Website ini
+                        ---------------- </font>
+                </font>
+            </font>
+        </marquee>
+    </div>
+    <!-- End Heroes -->
 
     <!-- start contact us -->
-    <section class="success" id="contact" style="padding: 30px; border-top: solid 2px #fff;">
+    <section id="contact" style="color: white;">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Kontak Kami</h2>
-                    <hr style="width: 150px; text-align: center;">
-                </div>
-                <div class="col-lg-12" style="margin-top:-10px;">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
-                        <h4 align="center">PPDB ONLINE © PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
-                            SHOLIHIN<br>Komplek Villa Mas Jalan Dr Harun 2 Gg H, Gg. Agus Salim 1, Kota Baru, Kec.
-                            Tanjungkarang Timur, Kota Bandar Lampung, Lampung 35121</h4>
-                        <p align="center">
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15888.050703319945!2d105.275471!3d-5.4150387!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40dbafadfad04f%3A0xf9979dc6e7e39685!2sPonpes%20Yatim%20Piatu%20%26%20Dhuafa%20Tahfidzul%20Qur&#39;an%20Riyadhus%20Sholihin!5e0!3m2!1sid!2sid!4v1685886494898!5m2!1sid!2sid"
-                                width="200" height="200" style="border:0; border-radius: 20px;" allowfullscreen=""
-                                loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </p>
-                        <p align="center" style="font-size: 14px;">
-                            <span><b><i class="fa fa-phone-square">&nbsp;</i>081289787021 (Ust. M Iqmal Zain,
-                                    S.Pd)</b></span>
-                            <span><b><i class="fa fa-phone-square">&nbsp;</i>085609609620 (Ust. Suryanto)</b></span><br>
-                            <span><b><i class="fa fa-envelope">&nbsp;</i>
-                                    ppypd.riyadhussholihin@gmail.com</b></span><br>
-                    </div>
+            <div class="px-4 py-5 my-5 text-center">
+                <span class="display-5 fw-bold text-body-emphasis-white border-bottom">Kontak Kami</span>
+                <div class="col-lg-6 mx-auto">
+                    <br>
+                    <h4 class="lead mb-4">PPDB ONLINE © PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN
+                        RIYADHUS SHOLIHIN<br>Komplek Villa Mas Jalan Dr Harun 2 Gg H, Gg. Agus Salim 1, Kota Baru,
+                        Kec.
+                        Tanjungkarang Timur, Kota Bandar Lampung, Lampung 35121</h4>
+                    <p align="center">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15888.050703319945!2d105.275471!3d-5.4150387!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40dbafadfad04f%3A0xf9979dc6e7e39685!2sPonpes%20Yatim%20Piatu%20%26%20Dhuafa%20Tahfidzul%20Qur&#39;an%20Riyadhus%20Sholihin!5e0!3m2!1sid!2sid!4v1685886494898!5m2!1sid!2sid"
+                            width="200" height="200" style="border:0; border-radius: 20px;" allowfullscreen=""
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </p>
+                    <p align="center" style="font-size: 14px;">
+                        <span><b><i class="fa fa-phone-square">&nbsp;</i>081289787021 (Ust. M Iqmal Zain,
+                                S.Pd)</b></span>
+                        <span><b><i class="fa fa-phone-square">&nbsp;</i>085609609620 (Ust.
+                                Suryanto)</b></span><br>
+                        <span><b><i class="fa fa-envelope">&nbsp;</i>
+                                ppypd.riyadhussholihin@gmail.com</b></span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -144,17 +172,13 @@
     <!-- end contact us -->
 
     <!-- start footer -->
-    <footer class="text-center">
-        <div class="footer-below">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        PPDB Online © PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN
-                        - 2023 </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top">
+            <p class="text-center text-light">PPDB Online © PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
+                SHOLIHIN
+                - 2023</p>
+        </footer>
+    </div>
     <!-- end footer -->
 
 </body>
