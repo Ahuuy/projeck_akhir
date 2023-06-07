@@ -32,25 +32,25 @@
         $(this).addClass('active'); // Menambahkan kelas 'active' pada tab yang diklik
 
         // Menampilkan atau menyembunyikan konten sesuai dengan tab yang diklik
-        var target = $(this).find('a').attr('href');
+        let target = $(this).find('a').attr('href');
         $('.tab-content > div').hide(); // Menyembunyikan semua konten tab
         $(target).show(); // Menampilkan konten yang sesuai dengan tab yang diklik
       });
 
       $('.field-wrap input').on('input', function () {
-        var input = $(this);
-        var label = input.siblings('label');
+        let input = $(this);
+        let label = input.siblings('label');
         if (input.val().length > 0) {
           label.hide();
         } else {
           label.show();
         }
       });
+
       // Registrasi
       $('#signup-form').submit(function (e) {
         e.preventDefault();
-        var email = $('#email').val();
-
+        let email = $('#email').val();
         // Cek email terlebih dahulu sebelum mengirim permintaan
         checkEmail(email);
       });
@@ -79,7 +79,7 @@
 
       // Fungsi untuk melakukan registrasi setelah validasi email
       function registerUser() {
-        var data = {
+        let data = {
           first_name: $('#first_name').val(),
           last_name: $('#last_name').val(),
           email: $('#email').val(),
@@ -101,8 +101,40 @@
           }
         });
       }
-    });
 
+      //Login
+      $('#login-form').submit(function (event) {
+        event.preventDefault(); // Menghentikan aksi default saat form disubmit
+
+        let email = $('#mail').val();
+        let password = $('#password').val();
+
+        // Kirim permintaan POST ke endpoint /signin
+        $.ajax({
+          url: '/signin',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ email: email, password: password }),
+          success: function (response) {
+            if (response.message === "Berhasil login") {
+              // Tampilkan pesan berhasil login
+              alert(response.message);
+              // Arahkan ke halaman berikutnya setelah login berhasil
+              window.location.href = '/dashboard';
+            } else {
+              // Tampilkan pesan kesalahan jika login gagal
+              alert(response.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            // Tanggapan kesalahan dari server
+            let errorMessage = JSON.parse(xhr.responseText).message;
+            alert(errorMessage); // Tampilkan pesan kesalahan dari server
+          }
+        });
+      });
+
+    });
   </script>
 </head>
 

@@ -61,7 +61,25 @@ def check_email():
     else:
         return jsonify({"exists": False})
     
-    
+@app.route("/signin", methods=["POST"])
+def signin():
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
+
+    # Cari pengguna berdasarkan alamat email
+    user = db.users.find_one({"email": email})
+
+    if user:
+        # Verifikasi password
+        hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        if hashed_password == user["password"]:
+            return jsonify({"message": "Berhasil login"})
+        else:
+            return jsonify({"message": "Email atau password salah"})
+    else:
+        return jsonify({"message": "Email atau password salah"})
+
 
 @app.route("/dashboard")
 def dashboard():
