@@ -8,7 +8,7 @@ import bcrypt
 
 app = Flask(__name__)
 
-SECRET_KEY = "ppdb"
+SECRET_KEY = "secret_key"
 
 client = MongoClient(
     "mongodb+srv://test:sparta@cluster0.jvoejms.mongodb.net/?retryWrites=true&w=majority"
@@ -74,7 +74,38 @@ def signin():
         # Verifikasi password
         hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
         if hashed_password == user["password"]:
-            return jsonify({"message": "Berhasil login"})
+            # Buat token JWT
+            payload = {"email": email}
+            token = jwt.encode(payload, str(app.config["SECRET_KEY"]), algorithm="HS256")
+
+            return jsonify({"message": "Berhasil login", "token": token})
+        else:
+            return jsonify({"message": "Email atau password salah"})
+    else:
+        return jsonify({"message": "Email atau password salah"})
+    
+@app.route("/ppdb-console")
+def ppdb_console():
+    return render_template("adminlogin.html")
+
+@app.route("/admin", methods=["POST"])
+def admin():
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
+
+    # Cari pengguna berdasarkan alamat email
+    user = db.admin.find_one({"email": email})
+
+    if user:
+        # Verifikasi password
+        hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        if hashed_password == user["password"]:
+            # Buat token JWT
+            payload = {"email": email}
+            token = jwt.encode(payload, str(app.config["SECRET_KEY"]), algorithm="HS256")
+
+            return jsonify({"message": "Berhasil login", "token": token})
         else:
             return jsonify({"message": "Email atau password salah"})
     else:
