@@ -116,6 +116,9 @@ def admin():
 def dashboard():
     return render_template("index.html")
 
+@app.route("/pendaftaran")
+def pendaftaran():
+    return render_template("pendaftaran.html")
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
