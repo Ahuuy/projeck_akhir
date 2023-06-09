@@ -22,3 +22,17 @@ body {
     margin-top: 6rem;
     padding-left: 10px;
 }
+
+.reg-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-konfirmasi {
+    text-align: center;
+}
+
+.centerdiv {
+    display: flex;
+    justify-content: center;
+}
