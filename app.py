@@ -34,6 +34,9 @@ def signup():
     email = data["email"]
     password = data["password"]
 
+    if len(password) < 8:
+        return jsonify({"message": "Password harus memiliki minimal 8 karakter"})
+
     # Hash password using SHA256
     hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
@@ -47,7 +50,7 @@ def signup():
     # Save user to MongoDB
     db.users.insert_one(user)
 
-    return jsonify({"message": "User registered successfully"})
+    return jsonify({"message": "User registered successfully"}) 
 
 @app.route("/check-email", methods=["POST"])
 def check_email():
