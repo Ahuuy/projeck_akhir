@@ -130,23 +130,37 @@
     <section id="registrasi">
         <div class="container">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body px-5 py-5">
+                    <h1 class="reg-title">Pendaftaran Santri</h1>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" id="exampleFormControlInput1"
                             placeholder="Nama Lengkap">
                     </div>
                     <div class="mb-3">
-                        <label for="province" class="form-label">Province</label>
+                        <label for="province" class="form-label">Asal Provinsi</label>
                         <select class="form-select" id="province" onchange="fetchCities()">
                             <option value="">-- Pilih Provinsi --</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="city" class="form-label">City</label>
+                        <label for="city" class="form-label">Asal Kota</label>
                         <select class="form-select" id="city" disabled>
                             <option value="">-- Pilih Kota/Kabupaten --</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Nomor HP/Whatsapp</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1"
+                            placeholder="08590909090">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">KTP, KK, Ijazah, dan surat pendukung(dalam bentuk
+                            zip)</label>
+                        <input class="form-control" type="file" id="formFile">
+                    </div>
+                    <div class="centerdiv">
+                        <button type="button" class="btn btn-primary btn-konfirmasi" style="margin-top: 2rem;">Konfirmasi</button>
                     </div>
                 </div>
             </div>
