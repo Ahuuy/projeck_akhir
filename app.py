@@ -123,6 +123,81 @@ def dashboard():
 def pendaftaran():
     return render_template("pendaftaran.html")
 
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")
+
+@app.route("/profile", methods=["GET"])
+def get_profile():
+    # Ambil profil dari MongoDB
+    profile = db.profiles.find_one()
+
+    if profile:
+        return jsonify(profile)
+    else:
+        return jsonify({"message": "Profil tidak ditemukan"})
+    
+@app.route("/profile", methods=["POST"])
+def create_profile():
+    data = request.get_json()
+    nama = data.get("nama")
+    jenis_kelamin = data.get("jenis_kelamin")
+    alamat = data.get("alamat")
+    tempat_lahir = data.get("tempat_lahir")
+    tanggal_lahir = data.get("tanggal_lahir")
+    foto = data.get("foto")
+
+    if not (nama and jenis_kelamin and alamat and tempat_lahir and tanggal_lahir):
+        return jsonify({"message": "Semua form harus diisi"}), 400
+
+    profile = {
+        "nama": nama,
+        "jenis_kelamin": jenis_kelamin,
+        "alamat": alamat,
+        "tempat_lahir": tempat_lahir,
+        "tanggal_lahir": tanggal_lahir,
+        "foto": foto
+    }
+
+    # Simpan profil ke MongoDB
+    db.profiles.insert_one(profile)
+
+    return jsonify({"message": "Profil berhasil disimpan"})
+
+@app.route("/profile", methods=["PUT"])
+def update_profile():
+    data = request.get_json()
+    nama = data.get("nama")
+    jenis_kelamin = data.get("jenis_kelamin")
+    alamat = data.get("alamat")
+    tempat_lahir = data.get("tempat_lahir")
+    tanggal_lahir = data.get("tanggal_lahir")
+    foto = data.get("foto")
+
+    if not (nama and jenis_kelamin and alamat and tempat_lahir and tanggal_lahir):
+        return jsonify({"message": "Semua form harus diisi"}), 400
+
+    profile = {
+        "nama": nama,
+        "jenis_kelamin": jenis_kelamin,
+        "alamat": alamat,
+        "tempat_lahir": tempat_lahir,
+        "tanggal_lahir": tanggal_lahir,
+        "foto": foto
+    }
+
+    # Perbarui profil di MongoDB
+    db.profiles.update_one({}, {"$set": profile})
+
+    return jsonify({"message": "Profil berhasil diperbarui"})
+
+@app.route("/profile/foto", methods=["DELETE"])
+def delete_photo():
+    # Hapus foto dari profil di MongoDB
+    db.profiles.update_one({}, {"$unset": {"foto": ""}})
+
+    return jsonify({"message": "Foto berhasil dihapus"})
+
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
     app.run("0.0.0.0", port=5000, debug=True)
