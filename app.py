@@ -11,7 +11,7 @@ app = Flask(__name__)
 SECRET_KEY = "secret_key"
 
 client = MongoClient(
-    "mongodb+srv://test:sparta@cluster0.jvoejms.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb://grup4kelompok1:kelompok1@ac-pgwmogi-shard-00-00.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-01.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-02.fl0gdtc.mongodb.net:27017/?ssl=true&replicaSet=atlas-jhyhsx-shard-0&authSource=admin&retryWrites=true&w=majority"
 )
 db = client.dbTester
 
@@ -197,6 +197,56 @@ def delete_photo():
     db.profiles.update_one({}, {"$unset": {"foto": ""}})
 
     return jsonify({"message": "Foto berhasil dihapus"})
+
+# Pengumuman
+@app.route('/inputpengumuman', methods=['GET', 'POST'])
+def pengumuman():
+    if request.method == 'POST':
+        tglpengumuman = request.form['tglpengumuman']
+        isipengumuman = request.form['isipengumuman']
+        link = request.form['link']
+
+        db.pengumuman.insert_one({
+            'tglpengumuman': tglpengumuman,
+            'isipengumuman': isipengumuman,
+            'link':link
+        })
+
+        return redirect('/pengumumanadmin')
+    
+    return render_template('inputpengumuman.html')
+
+
+@app.route('/pengumumanadmin')
+def isi_pengumuman():
+    pengumumanadmin = db.pengumuman.find()
+
+    return render_template('pengumumanadmin.html', pengumumanadmin=pengumumanadmin)
+
+
+@app.route('/delete/<isipengumuman>')
+def delete(isipengumuman):
+    db.pengumuman.delete_one({'isipengumuman': isipengumuman})
+
+    return redirect('/pengumumanadmin')
+
+@app.route('/edit/<isipengumuman>')
+def edit_data(isipengumuman):
+    pengumumanadmin = db.pengumuman.find_one({'isipengumuman': isipengumuman})
+    return render_template('editpengumuman.html', data=pengumumanadmin)
+
+@app.route('/update/<isipengumuman>', methods=['POST'])
+def update_data(isipengumuman):
+    tglpengumuman_baru = request.form['tglpengumuman']
+    isipengumuman_baru = request.form['isipengumuman']
+    link_baru = request.form['link']
+    db.pengumuman.update_one({'isipengumuman': isipengumuman},{'$set': {'tglpengumuman': tglpengumuman_baru, 'isipengumuman': isipengumuman_baru, 'link':link_baru}})
+    return redirect(url_for('isi_pengumuman'))
+
+@app.route('/pengumumanuser')
+def pengumumanuser_():
+    data = db.pengumuman.find()
+    return render_template('pengumumanuser.html', pengumumanuser=data)
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
