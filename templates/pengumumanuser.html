@@ -94,7 +94,8 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
                     <li><a class="dropdown-item" href="#"><i class="fa fa-user" aria-hidden="true"></i>Profile</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -131,7 +132,8 @@
                                                     <td>{{ loop.index }}</td>
                                                     <td>{{ info.tglpengumuman }}</td>
                                                     <td class="text-start">{{ info.isipengumuman }}</td>
-                                                    <td class="text-start">{{ info.link }}</td>
+                                                    <td class="text-start"><a href="{{ info.link }}">{{ info.link }}</a>
+                                                    </td>
                                                 </tr>
                                                 {% endfor %}
 
@@ -149,9 +151,6 @@
 
     </section>
     <!-- End Tabel -->
-
-
-
 </body>
 
 </html>

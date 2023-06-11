@@ -33,7 +33,6 @@
                 Swal.fire('Data Berhasil di Hapus!', '', 'success');
             });
         });
-
     </script>
     <style>
         * {
@@ -107,7 +106,8 @@
                         class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -151,15 +151,20 @@
                                                     <td>{{ loop.index }}</td>
                                                     <td>{{ info.tglpengumuman }}</td>
                                                     <td class="text-start">{{ info.isipengumuman }}</td>
-                                                    <td class="text-start">{{ info.link }}</td>
+                                                    <td class="text-start"><a href="{{ info.link }}">{{ info.link }}</a>
+                                                    </td>
                                                     <td>
                                                         <nav class="level is-mobile">
-                                                            <a type="button" 
+                                                            <a type="button"
                                                                 class="btn btn-outline-danger flex-fill mr-2"
-                                                                href="/delete/{{ info.isipengumuman }}" id="btnhapus"><i class="fa fa-trash-o" aria-hidden="true"></i> Hapus</a>
+                                                                href="/delete/{{ info.isipengumuman }}" id="btnhapus"><i
+                                                                    class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                Hapus</a>
                                                             <a type="button"
                                                                 class="btn btn-outline-warning flex-fill mr-2"
-                                                                href="/edit/{{ info.isipengumuman }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a>
+                                                                href="/edit/{{ info.isipengumuman }}"><i
+                                                                    class="fa fa-pencil-square-o"
+                                                                    aria-hidden="true"></i> Edit</a>
                                                         </nav>
                                                     </td>
                                                 </tr>
@@ -179,8 +184,6 @@
 
     </section>
     <!-- End Tabel -->
-
-
 
 </body>
 
