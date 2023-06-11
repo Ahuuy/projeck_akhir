@@ -1,13 +1,15 @@
 from flask import Flask, redirect, url_for, render_template, request, jsonify
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+from werkzeug.utils import secure_filename
 import jwt
 import hashlib
-import bson
-import bcrypt
+import os
 
 app = Flask(__name__)
 
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 SECRET_KEY = "secret_key"
 
 client = MongoClient(
@@ -50,7 +52,8 @@ def signup():
     # Save user to MongoDB
     db.users.insert_one(user)
 
-    return jsonify({"message": "User registered successfully"}) 
+    return jsonify({"message": "User registered successfully"})
+
 
 @app.route("/check-email", methods=["POST"])
 def check_email():
@@ -63,7 +66,8 @@ def check_email():
         return jsonify({"exists": True})
     else:
         return jsonify({"exists": False})
-    
+
+
 @app.route("/signin", methods=["POST"])
 def signin():
     data = request.get_json()
@@ -79,17 +83,21 @@ def signin():
         if hashed_password == user["password"]:
             # Buat token JWT
             payload = {"email": email}
-            token = jwt.encode(payload, str(app.config["SECRET_KEY"]), algorithm="HS256")
+            token = jwt.encode(
+                payload, str(app.config["SECRET_KEY"]), algorithm="HS256"
+            )
 
             return jsonify({"message": "Berhasil login", "token": token})
         else:
             return jsonify({"message": "Email atau password salah"})
     else:
         return jsonify({"message": "Email atau password salah"})
-    
+
+
 @app.route("/ppdb-console")
 def ppdb_console():
     return render_template("adminlogin.html")
+
 
 @app.route("/admin", methods=["POST"])
 def admin():
@@ -106,7 +114,9 @@ def admin():
         if hashed_password == user["password"]:
             # Buat token JWT
             payload = {"email": email}
-            token = jwt.encode(payload, str(app.config["SECRET_KEY"]), algorithm="HS256")
+            token = jwt.encode(
+                payload, str(app.config["SECRET_KEY"]), algorithm="HS256"
+            )
 
             return jsonify({"message": "Berhasil login", "token": token})
         else:
@@ -119,134 +129,83 @@ def admin():
 def dashboard():
     return render_template("index.html")
 
+
 @app.route("/pendaftaran")
 def pendaftaran():
     return render_template("pendaftaran.html")
 
+
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    profile = db.profiles.find_one({})
+    return render_template("profile.html", profile=profile)
 
-@app.route("/profile", methods=["GET"])
-def get_profile():
-    # Ambil profil dari MongoDB
-    profile = db.profiles.find_one()
 
-    if profile:
-        return jsonify(profile)
-    else:
-        return jsonify({"message": "Profil tidak ditemukan"})
-    
-@app.route("/profile", methods=["POST"])
-def create_profile():
-    data = request.get_json()
-    nama = data.get("nama")
-    jenis_kelamin = data.get("jenis_kelamin")
-    alamat = data.get("alamat")
-    tempat_lahir = data.get("tempat_lahir")
-    tanggal_lahir = data.get("tanggal_lahir")
-    foto = data.get("foto")
-
-    if not (nama and jenis_kelamin and alamat and tempat_lahir and tanggal_lahir):
-        return jsonify({"message": "Semua form harus diisi"}), 400
-
-    profile = {
-        "nama": nama,
-        "jenis_kelamin": jenis_kelamin,
-        "alamat": alamat,
-        "tempat_lahir": tempat_lahir,
-        "tanggal_lahir": tanggal_lahir,
-        "foto": foto
-    }
-
-    # Simpan profil ke MongoDB
-    db.profiles.insert_one(profile)
-
-    return jsonify({"message": "Profil berhasil disimpan"})
-
-@app.route("/profile", methods=["PUT"])
-def update_profile():
-    data = request.get_json()
-    nama = data.get("nama")
-    jenis_kelamin = data.get("jenis_kelamin")
-    alamat = data.get("alamat")
-    tempat_lahir = data.get("tempat_lahir")
-    tanggal_lahir = data.get("tanggal_lahir")
-    foto = data.get("foto")
-
-    if not (nama and jenis_kelamin and alamat and tempat_lahir and tanggal_lahir):
-        return jsonify({"message": "Semua form harus diisi"}), 400
-
-    profile = {
-        "nama": nama,
-        "jenis_kelamin": jenis_kelamin,
-        "alamat": alamat,
-        "tempat_lahir": tempat_lahir,
-        "tanggal_lahir": tanggal_lahir,
-        "foto": foto
-    }
-
-    # Perbarui profil di MongoDB
-    db.profiles.update_one({}, {"$set": profile})
-
-    return jsonify({"message": "Profil berhasil diperbarui"})
-
-@app.route("/profile/foto", methods=["DELETE"])
-def delete_photo():
-    # Hapus foto dari profil di MongoDB
-    db.profiles.update_one({}, {"$unset": {"foto": ""}})
-
-    return jsonify({"message": "Foto berhasil dihapus"})
 
 # Pengumuman
-@app.route('/inputpengumuman', methods=['GET', 'POST'])
+@app.route("/inputpengumuman", methods=["GET", "POST"])
 def pengumuman():
-    if request.method == 'POST':
-        tglpengumuman = request.form['tglpengumuman']
-        isipengumuman = request.form['isipengumuman']
-        link = request.form['link']
+    if request.method == "POST":
+        tglpengumuman = request.form["tglpengumuman"]
+        isipengumuman = request.form["isipengumuman"]
+        link = request.form["link"]
 
-        db.pengumuman.insert_one({
-            'tglpengumuman': tglpengumuman,
-            'isipengumuman': isipengumuman,
-            'link':link
-        })
+        db.pengumuman.insert_one(
+            {
+                "tglpengumuman": tglpengumuman,
+                "isipengumuman": isipengumuman,
+                "link": link,
+            }
+        )
 
-        return redirect('/pengumumanadmin')
-    
-    return render_template('inputpengumuman.html')
+        return redirect("/pengumumanadmin")
+
+    return render_template("inputpengumuman.html")
 
 
-@app.route('/pengumumanadmin')
+@app.route("/pengumumanadmin")
 def isi_pengumuman():
     pengumumanadmin = db.pengumuman.find()
 
-    return render_template('pengumumanadmin.html', pengumumanadmin=pengumumanadmin)
+    return render_template("pengumumanadmin.html", pengumumanadmin=pengumumanadmin)
 
 
-@app.route('/delete/<isipengumuman>')
+@app.route("/delete/<isipengumuman>")
 def delete(isipengumuman):
-    db.pengumuman.delete_one({'isipengumuman': isipengumuman})
+    db.pengumuman.delete_one({"isipengumuman": isipengumuman})
 
-    return redirect('/pengumumanadmin')
+    return redirect("/pengumumanadmin")
 
-@app.route('/edit/<isipengumuman>')
+
+@app.route("/edit/<isipengumuman>")
 def edit_data(isipengumuman):
-    pengumumanadmin = db.pengumuman.find_one({'isipengumuman': isipengumuman})
-    return render_template('editpengumuman.html', data=pengumumanadmin)
+    pengumumanadmin = db.pengumuman.find_one({"isipengumuman": isipengumuman})
+    return render_template("editpengumuman.html", data=pengumumanadmin)
 
-@app.route('/update/<isipengumuman>', methods=['POST'])
+
+@app.route("/update/<isipengumuman>", methods=["POST"])
 def update_data(isipengumuman):
-    tglpengumuman_baru = request.form['tglpengumuman']
-    isipengumuman_baru = request.form['isipengumuman']
-    link_baru = request.form['link']
-    db.pengumuman.update_one({'isipengumuman': isipengumuman},{'$set': {'tglpengumuman': tglpengumuman_baru, 'isipengumuman': isipengumuman_baru, 'link':link_baru}})
-    return redirect(url_for('isi_pengumuman'))
+    tglpengumuman_baru = request.form["tglpengumuman"]
+    isipengumuman_baru = request.form["isipengumuman"]
+    link_baru = request.form["link"]
+    db.pengumuman.update_one(
+        {"isipengumuman": isipengumuman},
+        {
+            "$set": {
+                "tglpengumuman": tglpengumuman_baru,
+                "isipengumuman": isipengumuman_baru,
+                "link": link_baru,
+            }
+        },
+    )
+    return redirect(url_for("isi_pengumuman"))
 
-@app.route('/pengumumanuser')
+
+@app.route("/pengumumanuser")
 def pengumumanuser_():
     data = db.pengumuman.find()
-    return render_template('pengumumanuser.html', pengumumanuser=data)
+    return render_template("pengumumanuser.html", pengumumanuser=data)
+
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD

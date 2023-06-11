@@ -41,6 +41,50 @@
             }
 
             $("#profile-image-input").change(uploadProfileImage);
+
+
+            // Fungsi untuk mengaktifkan mode edit
+            function enableEditMode() {
+                // Menghapus atribut readonly dan disabled
+                $("#full-name").removeAttr("readonly");
+                $("#gender").removeAttr("disabled");
+                $("#address").removeAttr("readonly");
+                $("#birthplace").removeAttr("readonly");
+                $("#birthdate").removeAttr("readonly");
+
+                // Mengubah tampilan tombol
+                $("#edit-button").hide();
+                $("#save-profile-form").hide();
+                $("#update-button").show();
+            }
+
+            // Fungsi untuk menonaktifkan mode edit
+            function disableEditMode() {
+                // Menambahkan atribut readonly dan disabled
+                $("#full-name").attr("readonly", true);
+                $("#gender").attr("disabled", true);
+                $("#address").attr("readonly", true);
+                $("#birthplace").attr("readonly", true);
+                $("#birthdate").attr("readonly", true);
+
+                // Mengubah tampilan tombol
+                $("#edit-button").show();
+                $("#save-profile-form").show();
+                $("#update-button").hide();
+            }
+
+            // Menonaktifkan tombol "Update" saat halaman dimuat
+            $("#update-button").hide();
+
+            // Mengaktifkan mode edit saat tombol "Edit" diklik
+            $("#edit-button").click(function () {
+                enableEditMode();
+            });
+
+            // Menonaktifkan mode edit saat tombol "Update" diklik
+            $("#update-button").click(function () {
+                disableEditMode();
+            });
         });
     </script>
     <style>
@@ -115,8 +159,7 @@
         <div class="row justify-content-center mt-5">
             <div class="col-lg-6">
                 <div class="text-center">
-                    <img id="profile-image" src="static/pict/profile.png" class="rounded-circle" alt="Foto Profil"
-                        width="150" height="150">
+                    <img id="profile-image" src="{{ profile.photo }}" class="rounded-circle" alt="Foto Profil" width="150" height="150">
                     <div class="mt-3">
                         <input type="file" id="profile-image-input" accept="image/*">
                     </div>
@@ -124,39 +167,47 @@
                 <form>
                     <div class="mb-3">
                         <label for="full-name" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="full-name" placeholder="Nama Lengkap">
+                        <input type="text" class="form-control" id="full-name" placeholder="Nama Lengkap" value="{{ profile.full_name }}">
                     </div>
                     <div class="mb-3">
                         <label for="gender" class="form-label">Jenis Kelamin</label>
                         <select class="form-select" id="gender">
-                            <option value="male">Laki-laki</option>
-                            <option value="female">Perempuan</option>
-                            <option value="other">Lainnya</option>
+                            <option value="male" {% if profile.gender == 'male' %}selected{% endif %}>Laki-laki</option>
+                            <option value="female" {% if profile.gender == 'female' %}selected{% endif %}>Perempuan</option>
+                            <option value="other" {% if profile.gender == 'other' %}selected{% endif %}>Lainnya</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Alamat</label>
-                        <textarea class="form-control" id="address" rows="3"></textarea>
+                        <textarea class="form-control" id="address" rows="3">{{ profile.address }}</textarea>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
                             <label for="birthplace" class="form-label">Tempat Lahir</label>
-                            <input type="text" class="form-control" id="birthplace" placeholder="Tempat Lahir">
+                            <input type="text" class="form-control" id="birthplace" placeholder="Tempat Lahir" value="{{ profile.birthplace }}">
                         </div>
                         <div class="col">
                             <label for="birthdate" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="birthdate">
+                            <input type="date" class="form-control" id="birthdate" value="{{ profile.birthdate }}">
                         </div>
                     </div>
                     <div class="mb-3 text-end">
-                        <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-floppy-disk"></i> Simpan</button>
-                        <button type="button" class="btn btn-secondary" id="edit-button" > <i class="fa-solid fa-pen-to-square"></i> Edit</button>
-                        <button type="button" class="btn btn-danger" id="hapus-button"> <i class="fa-solid fa-trash"></i> Hapus</button>
+                        <button type="submit" class="btn btn-primary" id="save-profile-form">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan
+                        </button>
+                        <button type="button" class="btn btn-primary" id="update-button">
+                            <i class="fa-solid fa-pen-to-square"></i> Update
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="edit-button">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    
+
 </body>
 
 </html>
