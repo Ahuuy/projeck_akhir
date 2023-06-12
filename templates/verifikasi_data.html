@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validasi</title>
+
+    <!-- Link Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <!-- Link Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <!-- Link Ajax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- Link CDN Boostrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Link FA -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <!-- Link CSS -->
+    <link href="{{ url_for('static', filename='pendaftaran.css') }}" rel="stylesheet" />
+    <script src="/static/pendaftaran.js"></script>
+    <style>
+        .status-icon {
+            font-size: 48px;
+            /* Mengubah ukuran ikon */
+            margin-right: 10px;
+            vertical-align: middle;
+            /* Memposisikan ikon secara vertikal tengah */
+        }
+
+        .verifikasi-content {
+            text-align: center;
+            /* Memposisikan teks dan ikon ke tengah */
+            margin-top: 20px;
+        }
+
+        .verifikasi-content p {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg rounded fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
+                aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+                <a class="navbar-brand col-lg-3 me-0" href="/">
+                    <img src="{{ url_for('static', filename='logo.jpeg') }}" style="width: 45px; height:45px" />
+                    <span class="fs-4 nav-font" style="font-weight:bold; color: white;">PPDB Santri</span>
+                </a>
+                <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#info">Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#alur">Alur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#syarat">Syarat</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Kontak</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End navbar -->
+
+    <!-- Verifikasi -->
+    <section id="registrasi">
+        <div class="container">
+            <div class="card">
+                <div class="card-body px-5 py-5">
+                    <div class="verifikasi-content">
+                        {% if status == 'Menunggu' %}
+                        <i class="fa fa-hourglass-start status-icon menunggu"></i>
+                        {% elif status == 'Diterima' %}
+                        <i class="fa fa-check-circle status-icon diterima text-success"></i>
+                        {% elif status == 'Ditolak' %}
+                        <i class="fa fa-times-circle status-icon ditolak text-danger"></i>
+                        {% endif %}
+                        <h1>Status Verifikasi: {{ status }}</h1>
+                        {% if status == 'Menunggu' %}
+                        <h3>Terima kasih telah mendaftar di 
+                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. 
+                            Kami sedang memproses pendaftaran Anda.
+                            Mohon bersabar, tim kami sedang bekerja keras untuk 
+                            memverifikasi informasi yang Anda berikan.
+                            Kami akan segera memberikan kabar terbaru secepatnya. 
+                            Terima kasih atas pengertiannya
+                        </h3>
+
+                        {% elif status == 'Diterima' %}
+                        <h3 style="margin-bottom: 30px;">Selamat! Pendaftaran Anda telah diterima dengan sukses di 
+                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. 
+                            Kami sangat antusias untuk menyambut Anda sebagai bagian 
+                            dari pesantren kami. Terima kasih atas kepercayaan Anda kepada kami.
+                            Selamat bergabung dan nikmati perjalanan pendidikan yang penuh inspirasi 
+                            bersama pesantren kami!
+                        </h3>
+                        <a href="/unduh-pdf" download class="btn btn-primary">
+                            Unduh Kartu Ujian
+                        </a>
+
+                        {% elif status == 'Ditolak' %}
+                        <h3>Maaf, pendaftaran Anda di 
+                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN telah ditolak.
+                            Terima kasih atas partisipasi Anda dan upaya yang telah Anda lakukan.
+                            Kami menghargai minat Anda terhadap pesantren kami, 
+                            meskipun saat ini pendaftaran Anda tidak dapat diterima.
+                            Jika Anda memiliki pertanyaan lebih lanjut
+                            atau ingin mencari informasi tambahan, jangan ragu untuk menghubungi kami.
+                            Terima kasih atas pengertian dan kesempatan yang diberikan.
+                        </h3>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Verifikasi-->
+</body>
+
+</html>
