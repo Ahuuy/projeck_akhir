@@ -132,78 +132,80 @@
             <div class="card">
                 <div class="card-body px-5 py-5">
                     <h1 class="reg-title">Pendaftaran Santri</h1>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1"
-                            placeholder="Nama Lengkap">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nama Panggilan</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1"
-                            placeholder="Nama Lengkap">
-                    </div>
-                    <div class="mb-3">
-                        <label for="province" class="form-label">Asal Provinsi</label>
-                        <select class="form-select" id="province" onchange="fetchCities()">
-                            <option value="">-- Pilih Provinsi --</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="city" class="form-label">Asal Kota</label>
-                        <select class="form-select" id="city" disabled>
-                            <option value="">-- Pilih Kota/Kabupaten --</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="gender" class="form-label">Jenis Kelamin</label>
-                        <select class="form-select" id="gender">
-                            <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="laki-laki">Laki Laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nama Ayah</label>
-                        <input type="text" class="form-control" id="nama-ayah"
-                            placeholder="Nama Ayah">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nama Ibu</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1"
-                            placeholder="Nama Ibu">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Hobi</label>
-                        <input type="text" class="form-control" id="hobi"
-                            placeholder="hobi">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Cita-Cita</label>
-                        <input type="text" class="form-control" id="cita-cita"
-                            placeholder="Cita-Cita">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Bidang Yang di Tekuni</label>
-                        <input type="text" class="form-control" id="bidang"
-                            placeholder="Programmer">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Tokoh Yang di Kagumi</label>
-                        <input type="text" class="form-control" id="tokoh"
-                            placeholder="Soekarno">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nomor HP/Whatsapp</label>
-                        <input type="number" class="form-control" id="exampleFormControlInput1"
-                            placeholder="08590909090">
-                    </div>
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Foto 4x6</label>
-                        <input class="form-control" type="file" id="formFile">
-                    </div>
-                    <div class="centerdiv">
-                        <button type="button" class="btn btn-primary btn-konfirmasi" style="margin-top: 2rem;">Konfirmasi</button>
-                    </div>
+
+                    <form action="/validasi" method="POST">
+                        <div class="mb-3">
+                            <label for="nama-lengkap" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="nama-lengkap" name="nama_lengkap"
+                                placeholder="Nama Lengkap">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nama-panggilan" class="form-label">Nama Panggilan</label>
+                            <input type="text" class="form-control" id="nama-panggilan" name="nama_panggilan"
+                                placeholder="Nama Panggilan">
+                        </div>
+                        <div class="mb-3">
+                            <label for="province" class="form-label">Asal Provinsi</label>
+                            <select class="form-select" id="province" name="asal_provinsi" onchange="fetchCities()">
+                                <option value="">-- Pilih Provinsi --</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">Asal Kota</label>
+                            <select class="form-select" id="city" name="asal_kota" disabled>
+                                <option value="">-- Pilih Kota/Kabupaten --</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Jenis Kelamin</label>
+                            <select class="form-select" id="gender" name="jenis_kelamin">
+                                <option value="">-- Pilih Jenis Kelamin --</option>
+                                <option value="laki-laki">Laki Laki</option>
+                                <option value="perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nama-ayah" class="form-label">Nama Ayah</label>
+                            <input type="text" class="form-control" id="nama-ayah" name="nama_ayah"
+                                placeholder="Nama Ayah">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nama-ibu" class="form-label">Nama Ibu</label>
+                            <input type="text" class="form-control" id="nama-ibu" name="nama_ibu"
+                                placeholder="Nama Ibu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="hobi" class="form-label">Hobi</label>
+                            <input type="text" class="form-control" id="hobi" name="hobi" placeholder="Hobi">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cita-cita" class="form-label">Cita-Cita</label>
+                            <input type="text" class="form-control" id="cita-cita" name="cita_cita"
+                                placeholder="Cita-Cita">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bidang" class="form-label">Bidang Yang di Tekuni</label>
+                            <input type="text" class="form-control" id="bidang" name="bidang" placeholder="Programmer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tokoh" class="form-label">Tokoh Yang di Kagumi</label>
+                            <input type="text" class="form-control" id="tokoh" name="tokoh" placeholder="Soekarno">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nomor-hp" class="form-label">Nomor HP/Whatsapp</label>
+                            <input type="number" class="form-control" id="nomor-hp" name="nomor_hp"
+                                placeholder="08590909090">
+                        </div>
+                        <div class="mb-3">
+                            <label for="foto" class="form-label">Foto 4x6</label>
+                            <input class="form-control" type="file" id="foto" name="foto">
+                        </div>
+                        <div class="centerdiv">
+                            <button type="submit" class="btn btn-primary btn-konfirmasi"
+                                style="margin-top: 2rem;">Konfirmasi</button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
