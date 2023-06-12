@@ -128,7 +128,8 @@ def admin():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("index.html")
+    users = db.users.find_one({})
+    return render_template("index.html", users=users)
 
 
 @app.route("/pendaftaran", methods=['GET', 'POST'])

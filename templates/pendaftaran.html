@@ -88,7 +88,7 @@
 
 <body onload="fetchProvinces()">
 
-    <!-- Navbar -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg rounded fixed-top">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
@@ -103,22 +103,26 @@
                 </a>
                 <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="/dashboard">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#info">Info</a>
+                        <a class="nav-link" href="/pendaftaran">Pendaftaran</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About Us</a>
+                        <a class="nav-link" href="/pengumumanuser">Pengumuman</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#alur">Alur</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#syarat">Syarat</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contact">Kontak</a>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
+                    data-bs-display="static" aria-expanded="false">
+                    <img src="static/profile_pics/profile_placeholder.png" alt="User Photo"
+                        class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-lg-end">
+                    <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"
+                                aria-hidden="true"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
                     </li>
                 </ul>
             </div>
