@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, jsonify
+from flask import Flask, redirect, url_for, render_template, request, jsonify, send_from_directory, send_file
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
@@ -6,6 +6,7 @@ import jwt
 import hashlib
 import os
 import requests
+import weasyprint
 
 app = Flask(__name__)
 
@@ -200,6 +201,43 @@ def validasi():
                             provinces=provinces,
                             cities=cities)
 
+@app.route("/verifikasi")
+def verifikasi():
+    status = request.args.get('status')
+    if status == 'menunggu':
+        return render_template('verifikasi_data.html', status='Menunggu')
+    elif status == 'diterima':
+        return render_template('verifikasi_data.html', status='Diterima')
+    elif status == 'ditolak':
+        return render_template('verifikasi_data.html', status='Ditolak')
+    else:
+        return 'Status tidak valid'
+    
+@app.route("/unduh-pdf", methods=['GET'])
+def unduh_pdf():
+    # Mendapatkan path direktori "Downloads" pengguna
+    download_dir = os.path.expanduser("~/Downloads")
+
+    # Menentukan path lengkap file PDF tujuan
+    file_path = os.path.join(download_dir, "layout_kartu_ujian.pdf")
+
+    # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+    rendered_template = render_template("layout_kartu_ujian.html")
+
+    # Konversi HTML menjadi PDF menggunakan WeasyPrint
+    pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf()
+
+    # Simpan file PDF ke path tujuan
+    with open(file_path, 'wb') as file:
+        file.write(pdf)
+
+    # Kirim file PDF sebagai respons unduhan
+    return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
+
+    
+@app.route("/unduh_kartu_ujian")
+def unduh_kartu_ujian():
+    return render_template("layout_kartu_ujian.html")
 
 @app.route("/profile")
 def profile():
