@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import jwt
 import hashlib
 import os
+import requests
 
 app = Flask(__name__)
 
@@ -130,9 +131,73 @@ def dashboard():
     return render_template("index.html")
 
 
-@app.route("/pendaftaran")
+@app.route("/pendaftaran", methods=['GET', 'POST'])
 def pendaftaran():
     return render_template("pendaftaran.html")
+
+def fetch_provinces(api_key):
+    url = f'https://api.binderbyte.com/wilayah/provinsi?api_key={api_key}'
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        provinces_data = response.json()
+        provinces = provinces_data.get('value')
+        return provinces
+    else:
+        return None
+
+def fetch_cities(api_key, province_id):
+    url = f'https://api.binderbyte.com/wilayah/kabupaten?id_provinsi={province_id}&api_key={api_key}'
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        cities_data = response.json()
+        cities = cities_data.get('value')
+        return cities
+    else:
+        return None
+
+@app.route("/validasi", methods=["GET", "POST"])
+def validasi():
+    api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
+    nama_lengkap = request.form.get('nama_lengkap')
+    nama_panggilan = request.form.get('nama_panggilan')
+    asal_provinsi = request.form.get('asal_provinsi')
+    asal_kota = request.form.get('asal_kota')
+    jenis_kelamin = request.form.get('jenis_kelamin')
+    nama_ayah = request.form.get('nama_ayah')
+    nama_ibu = request.form.get('nama_ibu')
+    hobi = request.form.get('hobi')
+    cita_cita = request.form.get('cita_cita')
+    bidang = request.form.get('bidang')
+    tokoh = request.form.get('tokoh')
+    nomor_hp = request.form.get('nomor_hp')
+    foto = request.files.get('foto')
+
+    # Mendapatkan data provinsi
+    provinces = fetch_provinces(api_key)
+
+    # Mendapatkan data kota berdasarkan provinsi terpilih
+    cities = None
+    if asal_provinsi:
+        cities = fetch_cities(api_key, asal_provinsi)
+
+
+    return render_template("validasisantri.html",
+                            nama_lengkap=nama_lengkap,
+                            nama_panggilan=nama_panggilan,
+                            asal_provinsi=asal_provinsi,
+                            asal_kota=asal_kota,
+                            jenis_kelamin=jenis_kelamin,
+                            nama_ayah=nama_ayah,
+                            nama_ibu=nama_ibu,
+                            hobi=hobi,
+                            cita_cita=cita_cita,
+                            bidang=bidang,
+                            tokoh=tokoh,
+                            nomor_hp=nomor_hp,
+                            provinces=provinces,
+                            cities=cities)
 
 
 @app.route("/profile")
@@ -205,6 +270,8 @@ def update_data(isipengumuman):
 def pengumumanuser_():
     data = db.pengumuman.find()
     return render_template("pengumumanuser.html", pengumumanuser=data)
+
+
 
 
 if __name__ == "__main__":
