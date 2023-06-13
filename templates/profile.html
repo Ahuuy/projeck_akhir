@@ -43,6 +43,81 @@
             $("#profile-image-input").change(uploadProfileImage);
 
 
+            // save profil
+            $('form').submit(function (e) {
+                e.preventDefault();
+
+                // Validasi input form
+                var fullName = $('#full-name').val();
+                var gender = $('#gender').val();
+                var address = $('#address').val();
+                var birthplace = $('#birthplace').val();
+                var birthdate = $('#birthdate').val();
+                var fileInput = $('#profile-image-input')[0];
+
+                if (fullName === '' || gender === '' || address === '' || birthplace === '' || birthdate === '' || !fileInput.files[0]) {
+                    alert('Harap isi semua kolom pada formulir.');
+                    return;
+                }
+
+                var profileData = new FormData();
+                profileData.append('foto', fileInput.files[0]);
+                profileData.append('nama', fullName);
+                profileData.append('jenis_kelamin', gender);
+                profileData.append('alamat', address);
+                profileData.append('tempat_lahir', birthplace);
+                profileData.append('tanggal_lahir', birthdate);
+
+                $.ajax({
+                    url: '/save/profil',
+                    type: 'POST',
+                    data: profileData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        // Tampilkan pesan sukses
+                        alert(response);
+
+                        // Lakukan tindakan lain setelah berhasil ditambahkan
+                    },
+                    error: function (xhr, status, error) {
+                        // Tampilkan pesan error atau penanganan kesalahan
+                        alert('Terjadi kesalahan saat menambahkan profil.');
+                    }
+                });
+            });
+
+
+            // edit dan update profil
+            $('#update-button').click(function () {
+                var fileInput = $('#profile-image-input')[0];
+                var profileData = new FormData();
+                profileData.append('foto', fileInput.files[0]);
+                profileData.append('nama', $('#full-name').val());
+                profileData.append('jenis_kelamin', $('#gender').val());
+                profileData.append('alamat', $('#address').val());
+                profileData.append('tempat_lahir', $('#birthplace').val());
+                profileData.append('tanggal_lahir', $('#birthdate').val());
+
+                $.ajax({
+                    url: '/update/profil',
+                    type: 'POST',
+                    data: profileData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        // Tampilkan pesan sukses atau lakukan tindakan lain
+                        alert(response);
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        // Tampilkan pesan error atau lakukan penanganan kesalahan
+                        alert('Terjadi kesalahan saat memperbarui profil.');
+                    }
+                });
+            });
+
+
             // Fungsi untuk mengaktifkan mode edit
             function enableEditMode() {
                 // Menghapus atribut readonly dan disabled
@@ -85,6 +160,7 @@
             $("#update-button").click(function () {
                 disableEditMode();
             });
+
         });
     </script>
     <style>
@@ -159,7 +235,8 @@
         <div class="row justify-content-center mt-5">
             <div class="col-lg-6">
                 <div class="text-center">
-                    <img id="profile-image" src="{{ profile.photo }}" class="rounded-circle" alt="Foto Profil" width="150" height="150">
+                    <img id="profile-image" src="{{ profile.foto }}" class="rounded-circle" alt="Foto Profil"
+                        width="150" height="150">
                     <div class="mt-3">
                         <input type="file" id="profile-image-input" accept="image/*">
                     </div>
@@ -167,28 +244,33 @@
                 <form>
                     <div class="mb-3">
                         <label for="full-name" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="full-name" placeholder="Nama Lengkap" value="{{ profile.full_name }}">
+                        <input type="text" class="form-control" id="full-name" placeholder="Nama Lengkap"
+                            value="{{ profile.nama }}">
                     </div>
                     <div class="mb-3">
                         <label for="gender" class="form-label">Jenis Kelamin</label>
                         <select class="form-select" id="gender">
-                            <option value="male" {% if profile.gender == 'male' %}selected{% endif %}>Laki-laki</option>
-                            <option value="female" {% if profile.gender == 'female' %}selected{% endif %}>Perempuan</option>
-                            <option value="other" {% if profile.gender == 'other' %}selected{% endif %}>Lainnya</option>
+                            <option value="male" {% if profile.jenis_kelamin=='male' %}selected{% endif %}>Laki-laki
+                            </option>
+                            <option value="female" {% if profile.jenis_kelamin=='female' %}selected{% endif %}>Perempuan
+                            </option>
+                            <option value="other" {% if profile.jenis_kelamin=='other' %}selected{% endif %}>Lainnya
+                            </option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Alamat</label>
-                        <textarea class="form-control" id="address" rows="3">{{ profile.address }}</textarea>
+                        <textarea class="form-control" id="address" rows="3">{{ profile.alamat }}</textarea>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
                             <label for="birthplace" class="form-label">Tempat Lahir</label>
-                            <input type="text" class="form-control" id="birthplace" placeholder="Tempat Lahir" value="{{ profile.birthplace }}">
+                            <input type="text" class="form-control" id="birthplace" placeholder="Tempat Lahir"
+                                value="{{ profile.tempat_lahir }}">
                         </div>
                         <div class="col">
                             <label for="birthdate" class="form-label">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="birthdate" value="{{ profile.birthdate }}">
+                            <input type="text" class="form-control" id="birthdate" value="{{ profile.tanggal_lahir }}">
                         </div>
                     </div>
                     <div class="mb-3 text-end">
@@ -206,7 +288,7 @@
             </div>
         </div>
     </div>
-    
+
 
 </body>
 

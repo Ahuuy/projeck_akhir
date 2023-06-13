@@ -6,7 +6,7 @@ import jwt
 import hashlib
 import os
 import requests
-import weasyprint
+# import weasyprint
 
 app = Flask(__name__)
 
@@ -132,6 +132,64 @@ def dashboard():
     users = db.users.find_one({})
     return render_template("index.html", users=users)
 
+@app.route('/save/profil', methods=['POST'])
+def tambah_profil():
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+    foto = request.files['foto']
+    extension = foto.filename.split('.')[-1]
+    profilename = f'static/profile_pics/profile-{mytime}.{extension}'
+    foto.save(profilename)
+
+    nama = request.form['nama']
+    jenis_kelamin = request.form['jenis_kelamin']
+    alamat = request.form['alamat']
+    tempat_lahir = request.form['tempat_lahir']
+    tanggal_lahir_str = request.form['tanggal_lahir']
+    tanggal_lahir = datetime.strptime(tanggal_lahir_str, '%Y-%m-%d').date()
+
+    # Simpan data ke MongoDB
+    profil = {
+        'foto': profilename,
+        'nama': nama,
+        'jenis_kelamin': jenis_kelamin,
+        'alamat': alamat,
+        'tempat_lahir': tempat_lahir,
+        'tanggal_lahir': tanggal_lahir.strftime('%d-%m-%Y')  # Format tanggal yang diubah
+    }
+    db.profile.insert_one(profil)
+
+    return 'Profil berhasil ditambahkan'
+
+@app.route('/update/profil', methods=['POST'])
+def update_profil():
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+    foto = request.files['foto']
+    extension = foto.filename.split('.')[-1]
+    profilename = f'static/profile_pics/profile-{mytime}.{extension}'
+    foto.save(profilename)
+
+    nama = request.form['nama']
+    jenis_kelamin = request.form['jenis_kelamin']
+    alamat = request.form['alamat']
+    tempat_lahir = request.form['tempat_lahir']
+    tanggal_lahir = today.strptime(request.form['tanggal_lahir'], '%d-%m-%Y')
+
+    # Update data di MongoDB
+    db.profile.update_one({}, {'$set': {
+        'foto': profilename,
+        'nama': nama,
+        'jenis_kelamin': jenis_kelamin,
+        'alamat': alamat,
+        'tempat_lahir': tempat_lahir,
+        'tanggal_lahir': tanggal_lahir.strftime('%d-%m-%Y')
+    }})
+
+    return 'Profil berhasil diperbarui'
+
 
 @app.route("/pendaftaran", methods=['GET', 'POST'])
 def pendaftaran():
@@ -213,26 +271,26 @@ def verifikasi():
     else:
         return 'Status tidak valid'
     
-@app.route("/unduh-pdf", methods=['GET'])
-def unduh_pdf():
-    # Mendapatkan path direktori "Downloads" pengguna
-    download_dir = os.path.expanduser("~/Downloads")
+# @app.route("/unduh-pdf", methods=['GET'])
+# def unduh_pdf():
+#     # Mendapatkan path direktori "Downloads" pengguna
+#     download_dir = os.path.expanduser("~/Downloads")
 
-    # Menentukan path lengkap file PDF tujuan
-    file_path = os.path.join(download_dir, "layout_kartu_ujian.pdf")
+#     # Menentukan path lengkap file PDF tujuan
+#     file_path = os.path.join(download_dir, "layout_kartu_ujian.pdf")
 
-    # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-    rendered_template = render_template("layout_kartu_ujian.html")
+#     # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+#     rendered_template = render_template("layout_kartu_ujian.html")
 
-    # Konversi HTML menjadi PDF menggunakan WeasyPrint
-    pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf()
+#     # Konversi HTML menjadi PDF menggunakan WeasyPrint
+#     pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf()
 
-    # Simpan file PDF ke path tujuan
-    with open(file_path, 'wb') as file:
-        file.write(pdf)
+#     # Simpan file PDF ke path tujuan
+#     with open(file_path, 'wb') as file:
+#         file.write(pdf)
 
-    # Kirim file PDF sebagai respons unduhan
-    return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
+#     # Kirim file PDF sebagai respons unduhan
+#     return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
 
     
 @app.route("/unduh_kartu_ujian")
@@ -241,7 +299,7 @@ def unduh_kartu_ujian():
 
 @app.route("/profile")
 def profile():
-    profile = db.profiles.find_one({})
+    profile = db.profile.find_one({})
     return render_template("profile.html", profile=profile)
 
 
