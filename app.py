@@ -1,4 +1,13 @@
-from flask import Flask, redirect, url_for, render_template, request, jsonify, send_from_directory, send_file
+from flask import (
+    Flask,
+    redirect,
+    url_for,
+    render_template,
+    request,
+    jsonify,
+    send_from_directory,
+    send_file,
+)
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
@@ -127,112 +136,150 @@ def admin():
         return jsonify({"message": "Email atau password salah"})
 
 
+@app.route("/home-admin")
+def home_admin():
+    users = db.users.find_one({})
+    return render_template("home_admin.html", users=users)
+
+
+@app.route('/data_jenis_kelamin')
+def data_jenis_kelamin():
+    pendaftar = db.profile.find({}, {'jenis_kelamin': 1})  # Mengambil semua dokumen dengan hanya mengambil jenis_kelamin
+    jumlah_laki_laki = 0
+    jumlah_perempuan = 0
+    for p in pendaftar:
+        if p['jenis_kelamin'] == 'male':
+            jumlah_laki_laki += 1
+        elif p['jenis_kelamin'] == 'female':
+            jumlah_perempuan += 1
+    data = {
+        'laki_laki': jumlah_laki_laki,
+        'perempuan': jumlah_perempuan
+    }
+    return jsonify(data)
+
+
+
+
+
 @app.route("/dashboard")
 def dashboard():
     users = db.users.find_one({})
     return render_template("index.html", users=users)
 
-@app.route('/save/profil', methods=['POST'])
+
+@app.route("/save/profil", methods=["POST"])
 def tambah_profil():
     today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+    mytime = today.strftime("%Y-%m-%d-%H-%M-%S")
 
-    foto = request.files['foto']
-    extension = foto.filename.split('.')[-1]
-    profilename = f'static/profile_pics/profile-{mytime}.{extension}'
+    foto = request.files["foto"]
+    extension = foto.filename.split(".")[-1]
+    profilename = f"static/profile_pics/profile-{mytime}.{extension}"
     foto.save(profilename)
 
-    nama = request.form['nama']
-    jenis_kelamin = request.form['jenis_kelamin']
-    alamat = request.form['alamat']
-    tempat_lahir = request.form['tempat_lahir']
-    tanggal_lahir_str = request.form['tanggal_lahir']
-    tanggal_lahir = datetime.strptime(tanggal_lahir_str, '%Y-%m-%d').date()
+    nama = request.form["nama"]
+    jenis_kelamin = request.form["jenis_kelamin"]
+    alamat = request.form["alamat"]
+    tempat_lahir = request.form["tempat_lahir"]
+    tanggal_lahir_str = request.form["tanggal_lahir"]
+    tanggal_lahir = datetime.strptime(tanggal_lahir_str, "%Y-%m-%d").date()
 
     # Simpan data ke MongoDB
     profil = {
-        'foto': profilename,
-        'nama': nama,
-        'jenis_kelamin': jenis_kelamin,
-        'alamat': alamat,
-        'tempat_lahir': tempat_lahir,
-        'tanggal_lahir': tanggal_lahir.strftime('%d-%m-%Y')  # Format tanggal yang diubah
+        "foto": profilename,
+        "nama": nama,
+        "jenis_kelamin": jenis_kelamin,
+        "alamat": alamat,
+        "tempat_lahir": tempat_lahir,
+        "tanggal_lahir": tanggal_lahir.strftime(
+            "%d-%m-%Y"
+        ),  # Format tanggal yang diubah
     }
     db.profile.insert_one(profil)
 
-    return 'Profil berhasil ditambahkan'
+    return "Profil berhasil ditambahkan"
 
-@app.route('/update/profil', methods=['POST'])
+
+@app.route("/update/profil", methods=["POST"])
 def update_profil():
     today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+    mytime = today.strftime("%Y-%m-%d-%H-%M-%S")
 
-    foto = request.files['foto']
-    extension = foto.filename.split('.')[-1]
-    profilename = f'static/profile_pics/profile-{mytime}.{extension}'
+    foto = request.files["foto"]
+    extension = foto.filename.split(".")[-1]
+    profilename = f"static/profile_pics/profile-{mytime}.{extension}"
     foto.save(profilename)
 
-    nama = request.form['nama']
-    jenis_kelamin = request.form['jenis_kelamin']
-    alamat = request.form['alamat']
-    tempat_lahir = request.form['tempat_lahir']
-    tanggal_lahir = today.strptime(request.form['tanggal_lahir'], '%d-%m-%Y')
+    nama = request.form["nama"]
+    jenis_kelamin = request.form["jenis_kelamin"]
+    alamat = request.form["alamat"]
+    tempat_lahir = request.form["tempat_lahir"]
+    tanggal_lahir = today.strptime(request.form["tanggal_lahir"], "%d-%m-%Y")
 
     # Update data di MongoDB
-    db.profile.update_one({}, {'$set': {
-        'foto': profilename,
-        'nama': nama,
-        'jenis_kelamin': jenis_kelamin,
-        'alamat': alamat,
-        'tempat_lahir': tempat_lahir,
-        'tanggal_lahir': tanggal_lahir.strftime('%d-%m-%Y')
-    }})
+    db.profile.update_one(
+        {},
+        {
+            "$set": {
+                "foto": profilename,
+                "nama": nama,
+                "jenis_kelamin": jenis_kelamin,
+                "alamat": alamat,
+                "tempat_lahir": tempat_lahir,
+                "tanggal_lahir": tanggal_lahir.strftime("%d-%m-%Y"),
+            }
+        },
+    )
 
-    return 'Profil berhasil diperbarui'
+    return "Profil berhasil diperbarui"
 
 
-@app.route("/pendaftaran", methods=['GET', 'POST'])
+@app.route("/pendaftaran", methods=["GET", "POST"])
 def pendaftaran():
     return render_template("pendaftaran.html")
 
+
 def fetch_provinces(api_key):
-    url = f'https://api.binderbyte.com/wilayah/provinsi?api_key={api_key}'
+    url = f"https://api.binderbyte.com/wilayah/provinsi?api_key={api_key}"
 
     response = requests.get(url)
     if response.status_code == 200:
         provinces_data = response.json()
-        provinces = provinces_data.get('value')
+        provinces = provinces_data.get("value")
         return provinces
     else:
         return None
 
+
 def fetch_cities(api_key, province_id):
-    url = f'https://api.binderbyte.com/wilayah/kabupaten?id_provinsi={province_id}&api_key={api_key}'
+    url = f"https://api.binderbyte.com/wilayah/kabupaten?id_provinsi={province_id}&api_key={api_key}"
 
     response = requests.get(url)
     if response.status_code == 200:
         cities_data = response.json()
-        cities = cities_data.get('value')
+        cities = cities_data.get("value")
         return cities
     else:
         return None
 
+
 @app.route("/validasi", methods=["GET", "POST"])
 def validasi():
-    api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
-    nama_lengkap = request.form.get('nama_lengkap')
-    nama_panggilan = request.form.get('nama_panggilan')
-    asal_provinsi = request.form.get('asal_provinsi')
-    asal_kota = request.form.get('asal_kota')
-    jenis_kelamin = request.form.get('jenis_kelamin')
-    nama_ayah = request.form.get('nama_ayah')
-    nama_ibu = request.form.get('nama_ibu')
-    hobi = request.form.get('hobi')
-    cita_cita = request.form.get('cita_cita')
-    bidang = request.form.get('bidang')
-    tokoh = request.form.get('tokoh')
-    nomor_hp = request.form.get('nomor_hp')
-    foto = request.files.get('foto')
+    api_key = "61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614"
+    nama_lengkap = request.form.get("nama_lengkap")
+    nama_panggilan = request.form.get("nama_panggilan")
+    asal_provinsi = request.form.get("asal_provinsi")
+    asal_kota = request.form.get("asal_kota")
+    jenis_kelamin = request.form.get("jenis_kelamin")
+    nama_ayah = request.form.get("nama_ayah")
+    nama_ibu = request.form.get("nama_ibu")
+    hobi = request.form.get("hobi")
+    cita_cita = request.form.get("cita_cita")
+    bidang = request.form.get("bidang")
+    tokoh = request.form.get("tokoh")
+    nomor_hp = request.form.get("nomor_hp")
+    foto = request.files.get("foto")
 
     # Mendapatkan data provinsi
     provinces = fetch_provinces(api_key)
@@ -242,35 +289,38 @@ def validasi():
     if asal_provinsi:
         cities = fetch_cities(api_key, asal_provinsi)
 
+    return render_template(
+        "validasisantri.html",
+        nama_lengkap=nama_lengkap,
+        nama_panggilan=nama_panggilan,
+        asal_provinsi=asal_provinsi,
+        asal_kota=asal_kota,
+        jenis_kelamin=jenis_kelamin,
+        nama_ayah=nama_ayah,
+        nama_ibu=nama_ibu,
+        hobi=hobi,
+        cita_cita=cita_cita,
+        bidang=bidang,
+        tokoh=tokoh,
+        nomor_hp=nomor_hp,
+        provinces=provinces,
+        cities=cities,
+    )
 
-    return render_template("validasisantri.html",
-                            nama_lengkap=nama_lengkap,
-                            nama_panggilan=nama_panggilan,
-                            asal_provinsi=asal_provinsi,
-                            asal_kota=asal_kota,
-                            jenis_kelamin=jenis_kelamin,
-                            nama_ayah=nama_ayah,
-                            nama_ibu=nama_ibu,
-                            hobi=hobi,
-                            cita_cita=cita_cita,
-                            bidang=bidang,
-                            tokoh=tokoh,
-                            nomor_hp=nomor_hp,
-                            provinces=provinces,
-                            cities=cities)
 
 @app.route("/verifikasi")
 def verifikasi():
-    status = request.args.get('status')
-    if status == 'menunggu':
-        return render_template('verifikasi_data.html', status='Menunggu')
-    elif status == 'diterima':
-        return render_template('verifikasi_data.html', status='Diterima')
-    elif status == 'ditolak':
-        return render_template('verifikasi_data.html', status='Ditolak')
+    status = request.args.get("status")
+    if status == "menunggu":
+        return render_template("verifikasi_data.html", status="Menunggu")
+    elif status == "diterima":
+        return render_template("verifikasi_data.html", status="Diterima")
+    elif status == "ditolak":
+        return render_template("verifikasi_data.html", status="Ditolak")
     else:
-        return 'Status tidak valid'
-    
+        return "Status tidak valid"
+
+
 @app.route("/unduh-pdf", methods=['GET'])
 def unduh_pdf():
     # Mendapatkan path direktori "Downloads" pengguna
@@ -294,16 +344,16 @@ def unduh_pdf():
     # Kirim file PDF sebagai respons unduhan
     return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
 
-    
+
 @app.route("/unduh_kartu_ujian")
 def unduh_kartu_ujian():
     return render_template("layout_kartu_ujian.html")
+
 
 @app.route("/profile")
 def profile():
     profile = db.profile.find_one({})
     return render_template("profile.html", profile=profile)
-
 
 
 # Pengumuman
@@ -369,8 +419,6 @@ def update_data(isipengumuman):
 def pengumumanuser_():
     data = db.pengumuman.find()
     return render_template("pengumumanuser.html", pengumumanuser=data)
-
-
 
 
 if __name__ == "__main__":
