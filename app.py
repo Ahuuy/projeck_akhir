@@ -282,8 +282,10 @@ def unduh_pdf():
     # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
     rendered_template = render_template("layout_kartu_ujian.html")
 
-    # Konversi HTML menjadi PDF menggunakan WeasyPrint
-    pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf()
+    # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+    pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+        stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+    )
 
     # Simpan file PDF ke path tujuan
     with open(file_path, 'wb') as file:
