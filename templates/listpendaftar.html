@@ -126,47 +126,25 @@
                                     <div class="table-responsive">
                                         <div class="row g-0">
                                             <div class="col-sm-6 col-md-8">
-                                                <h4>Pengumuman</h4>
-                                                <p class="text-muted">Berikut isi pengumuman!</p>
-                                            </div>
-                                            <div class="col-6 col-md-4 text-end">
-                                                <a href="/inputpengumuman" type="submit"
-                                                    class="btn btn-primary flex-fill"><i class="fa fa-plus-square"
-                                                        aria-hidden="true"></i> Tambah
-                                                </a>
+                                                <h4>List Pendaftar</h4>
+                                                <p class="text-muted">Berikut nama-nama calon santri yang sudah mendaftar!</p>
                                             </div>
                                         </div>
                                         <table class="table table-bordered table-striped dataTable text-center mx-auto">
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th class="col-sm-1">No</th>
-                                                    <th class="col-sm-2">Tanggal</th>
-                                                    <th>Isi Pengumuman</th>
-                                                    <th>Link</th>
-                                                    <th class="col-sm-3">Aksi</th>
+                                                    <th class="col-sm-2">Nama</th>
+                                                    <th>Tanggal Lahir</th>
+                                                    <th>Jenis Kelamin</th>
                                             </thead>
                                             <tbody id="tbody-box">
-                                                {% for info in pengumumanadmin %}
+                                                {% for calon in pendaftar %}
                                                 <tr>
                                                     <td>{{ loop.index }}</td>
-                                                    <td>{{ info.tglpengumuman }}</td>
-                                                    <td class="text-start">{{ info.isipengumuman }}</td>
-                                                    <td class="text-start"><a href="{{ info.link }}">{{ info.link }}</a>
-                                                    </td>
-                                                    <td>
-                                                        <nav class="level is-mobile">
-                                                            <a type="button"
-                                                                class="btn btn-outline-danger flex-fill mr-2"
-                                                                href="/delete/{{ info.isipengumuman }}" id="btnhapus"><i
-                                                                    class="fa fa-trash-o" aria-hidden="true"></i>
-                                                                Hapus</a>
-                                                            <a type="button"
-                                                                class="btn btn-outline-warning flex-fill mr-2"
-                                                                href="/edit/{{ info.isipengumuman }}"><i
-                                                                    class="fa fa-pencil-square-o"
-                                                                    aria-hidden="true"></i> Edit</a>
-                                                        </nav>
-                                                    </td>
+                                                    <td class="text-start">{{ calon.nama }}</td>
+                                                    <td class="text-start">{{ calon.tanggal_lahir }}</td>
+                                                    <td class="text-start">{{ calon.jenis_kelamin }} </td>
                                                 </tr>
                                                 {% endfor %}
 
