@@ -420,6 +420,11 @@ def pengumumanuser_():
     data = db.pengumuman.find()
     return render_template("pengumumanuser.html", pengumumanuser=data)
 
+#list pendaftar
+@app.route('/listpendaftar')
+def list_pendaftar():
+    pendaftar = db.profile.find()
+    return render_template('listpendaftar.html', pendaftar=pendaftar)
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
