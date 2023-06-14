@@ -6,7 +6,7 @@ import jwt
 import hashlib
 import os
 import requests
-# import weasyprint
+import weasyprint
 
 app = Flask(__name__)
 
@@ -148,9 +148,6 @@ def data_jenis_kelamin():
         'perempuan': jumlah_perempuan
     }
     return jsonify(data)
-
-
-
 
 
 @app.route("/dashboard")
@@ -300,28 +297,28 @@ def verifikasi():
     else:
         return 'Status tidak valid'
     
-# @app.route("/unduh-pdf", methods=['GET'])
-# def unduh_pdf():
-#     # Mendapatkan path direktori "Downloads" pengguna
-#     download_dir = os.path.expanduser("~/Downloads")
+@app.route("/unduh-pdf", methods=['GET'])
+def unduh_pdf():
+    # Mendapatkan path direktori "Downloads" pengguna
+    download_dir = os.path.expanduser("~/Downloads")
 
-#     # Menentukan path lengkap file PDF tujuan
-#     file_path = os.path.join(download_dir, "layout_kartu_ujian.pdf")
+    # Menentukan path lengkap file PDF tujuan
+    file_path = os.path.join(download_dir, "layout_kartu_ujian.pdf")
 
-#     # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-#     rendered_template = render_template("layout_kartu_ujian.html")
+    # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+    rendered_template = render_template("layout_kartu_ujian.html")
 
-#     # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
-#     pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
-#         stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
-#     )
+    # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+    pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+        stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+    )
 
-#     # Simpan file PDF ke path tujuan
-#     with open(file_path, 'wb') as file:
-#         file.write(pdf)
+    # Simpan file PDF ke path tujuan
+    with open(file_path, 'wb') as file:
+        file.write(pdf)
 
-#     # Kirim file PDF sebagai respons unduhan
-#     return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
+    # Kirim file PDF sebagai respons unduhan
+    return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
 
     
 @app.route("/unduh_kartu_ujian")
