@@ -51,105 +51,105 @@
       });
 
       // Registrasi
-$('#signup-form').submit(function (e) {
-  e.preventDefault();
-  let email = $('#email').val();
-  // Cek email terlebih dahulu sebelum mengirim permintaan
-  checkEmail(email);
-});
-
-// Fungsi untuk memeriksa email menggunakan AJAX
-function checkEmail(email) {
-  $.ajax({
-    url: '/check-email',
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({ email: email }),
-    success: function (response) {
-      if (response.exists) {
-        alert('Email sudah terdaftar');
-      } else {
-        // Email tidak terdaftar, lanjutkan registrasi
-        registerUser();
-      }
-    },
-    error: function (error) {
-      alert('Terjadi kesalahan saat memeriksa email');
-    }
-  });
-}
-
-// Fungsi untuk melakukan registrasi setelah validasi email
-function registerUser() {
-  let firstName = $('#first_name').val();
-  let lastName = $('#last_name').val();
-  let email = $('#email').val();
-  let password = $('#pass').val();
-
-  // Periksa panjang password
-  if (password.length < 8) {
-    alert('Password harus memiliki minimal 8 karakter');
-    return;
-  }
-
-  let data = {
-    first_name: firstName,
-    last_name: lastName,
-    email: email,
-    password: password
-  };
-
-  $.ajax({
-    url: '/signup',
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(data),
-    success: function (response) {
-      alert('Registrasi berhasil');
-      // Redirect ke halaman login
-      $('a[href="#login"]').click();
-    },
-    error: function (error) {
-      alert('Registrasi gagal');
-    }
-  });
-}
-
-
-      //Login
-      $('#login-form').submit(function (event) {
-        event.preventDefault(); // Menghentikan aksi default saat form disubmit
-
-        let email = $('#mail').val();
-        let password = $('#password').val();
-
-        // Kirim permintaan POST ke endpoint /signin
-        $.ajax({
-          url: '/signin',
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({ email: email, password: password }),
-          success: function (response) {
-            if (response.message === "Berhasil login") {
-              // Tampilkan pesan berhasil login
-              alert(response.message);
-              // Arahkan ke halaman berikutnya setelah login berhasil
-              window.location.href = '/dashboard';
-            } else {
-              // Tampilkan pesan kesalahan jika login gagal
-              alert(response.message);
-            }
-          },
-          error: function (xhr, status, error) {
-            // Tanggapan kesalahan dari server
-            let errorMessage = JSON.parse(xhr.responseText).message;
-            alert(errorMessage); // Tampilkan pesan kesalahan dari server
-          }
-        });
+      $('#signup-form').submit(function (e) {
+        e.preventDefault();
+        let email = $('#email').val();
+        // Cek email terlebih dahulu sebelum mengirim permintaan
+        checkEmail(email);
       });
 
+      // Fungsi untuk memeriksa email menggunakan AJAX
+      function checkEmail(email) {
+        $.ajax({
+          url: '/check-email',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ email: email }),
+          success: function (response) {
+            if (response.exists) {
+              alert('Email sudah terdaftar');
+            } else {
+              // Email tidak terdaftar, lanjutkan registrasi
+              registerUser();
+            }
+          },
+          error: function (error) {
+            alert('Terjadi kesalahan saat memeriksa email');
+          }
+        });
+      }
+
+      // Fungsi untuk melakukan registrasi setelah validasi email
+      function registerUser() {
+        let firstName = $('#first_name').val();
+        let lastName = $('#last_name').val();
+        let email = $('#email').val();
+        let password = $('#pass').val();
+
+        // Periksa panjang password
+        if (password.length < 8) {
+          alert('Password harus memiliki minimal 8 karakter');
+          return;
+        }
+
+        let data = {
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password
+        };
+
+        $.ajax({
+          url: '/signup',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function (response) {
+            alert('Registrasi berhasil');
+            // Redirect ke halaman login
+            $('a[href="#login"]').click();
+          },
+          error: function (error) {
+            alert('Registrasi gagal');
+          }
+        });
+      }
+
     });
+
+    // Login
+    // Login
+    function loginUser() {
+      let email = $('#mail').val();
+      let password = $('#password').val();
+
+      // Kirim permintaan POST ke endpoint /signin
+      $.ajax({
+        url: '/signin',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email: email, password: password }),
+        success: function (response) {
+          if (response.message === "success") {
+            // Tampilkan pesan berhasil login
+            alert('Login successful');
+            // Redirect ke halaman berikutnya setelah login berhasil
+            window.location.href = '/dashboard';
+          } else {
+            // Tampilkan pesan kesalahan jika login gagal
+            alert(response.error);
+          }
+        },
+        error: function (xhr, status, error) {
+          // Tanggapan kesalahan dari server
+          let errorMessage = JSON.parse(xhr.responseText).message;
+          alert(errorMessage); // Tampilkan pesan kesalahan dari server
+        }
+      });
+    }
   </script>
+  
+
 </head>
 
 <body>
@@ -160,12 +160,11 @@ function registerUser() {
       <li class="tab"><a href="#login">Log In</a></li>
     </ul>
 
+    <!-- Registrasi -->
     <div class="tab-content">
       <div id="signup">
         <h1>Sign Up</h1>
-
-        <form action="/login" method="post" id="signup-form">
-
+        <form id="signup-form">
           <div class="top-row">
             <div class="field-wrap">
               <label>
@@ -205,7 +204,7 @@ function registerUser() {
       <div id="login">
         <h1>Welcome Back!</h1>
 
-        <form action="/" method="post" id="login-form">
+        <form>
 
           <div class="field-wrap">
             <label>
@@ -223,7 +222,7 @@ function registerUser() {
 
           <p class="forgot"><a href="#">Forgot Password?</a></p>
 
-          <button class="button button-block" />Log In</button>
+          <a class="button button-block" onclick="loginUser()">Log In</a>
 
         </form>
 

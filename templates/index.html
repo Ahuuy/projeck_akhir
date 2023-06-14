@@ -105,8 +105,10 @@
 
     <!-- Pengumuman -->
     <section id="pengumuman">
-        <h1 class="text-center mb-4" style="margin-top: 100px; color: white;">Selamat Datang, {{ users.first_name }} {{
-            users.last_name }}</h1>
+        {% for user in users %}
+        <h1 class="text-center mb-4" style="margin-top: 100px; color: white;">Selamat Datang, {{ user.first_name }} {{
+            user.last_name }}</h1>
+        {% endfor %}
         <div class="container tbl mb-5">
             <div class="row">
                 <div class="col-md-12">
@@ -160,7 +162,7 @@
                 SHOLIHIN - 2023 <a href="#"><i class="fa fa-long-arrow-up text-white"></i></a></p>
         </footer>
     </div>
-    
+
     <!-- end footer -->
 
 </body>

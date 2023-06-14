@@ -1,7 +1,8 @@
-from flask import Flask, redirect, url_for, render_template, request, jsonify, send_from_directory, send_file
+from flask import Flask, redirect, url_for, render_template, request, jsonify, send_from_directory, send_file, make_response
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
+from jwt.exceptions import ExpiredSignatureError, DecodeError
 import jwt
 import hashlib
 import os
@@ -13,6 +14,7 @@ app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 SECRET_KEY = "secret_key"
+TOKEN_KEY = "KELOMPOK1"
 
 client = MongoClient(
     "mongodb://grup4kelompok1:kelompok1@ac-pgwmogi-shard-00-00.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-01.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-02.fl0gdtc.mongodb.net:27017/?ssl=true&replicaSet=atlas-jhyhsx-shard-0&authSource=admin&retryWrites=true&w=majority"
@@ -75,27 +77,32 @@ def signin():
     data = request.get_json()
     email = data["email"]
     password = data["password"]
+    pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    # Cari pengguna berdasarkan alamat email
-    user = db.users.find_one({"email": email})
+    result = db.users.find_one({"email": email, "password": pw_hash})
+    if result:
+        payload = {
+            "email": email,
+            "exp": datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-    if user:
-        # Verifikasi password
-        hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-        if hashed_password == user["password"]:
-            # Buat token JWT
-            payload = {"email": email}
-            token = jwt.encode(
-                payload, str(app.config["SECRET_KEY"]), algorithm="HS256"
-            )
+        response = make_response(
+            jsonify({
+                "message": "success",
+                "email": email,
+                "token": token
+            })
+        )
 
-            return jsonify({"message": "Berhasil login", "token": token})
-        else:
-            return jsonify({"message": "Email atau password salah"})
+        response.set_cookie("token", token)
+
+        return response
     else:
-        return jsonify({"message": "Email atau password salah"})
-
-
+        return jsonify({
+            "message": "fail",
+            "error": "We could not find a user with that email/password combination"
+        })
 @app.route("/ppdb-console")
 def ppdb_console():
     return render_template("adminlogin.html")
@@ -150,10 +157,26 @@ def data_jenis_kelamin():
     return jsonify(data)
 
 
-@app.route("/dashboard")
+@app.route('/dashboard', methods=['GET'])
 def dashboard():
-    users = db.users.find_one({})
-    return render_template("index.html", users=users)
+    token_receive = request.cookies.get("token")
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        email = payload.get('email')
+        user_info = db.users.find_one({'email': email})
+        if user_info:
+            users = [user_info]  # Mengubah user_info menjadi list untuk mengatasi error Jinja2
+            return render_template('index.html', users=users)  # Mengirimkan users ke template
+        else:
+            return redirect(url_for('login'))
+    except jwt.ExpiredSignatureError:
+        msg = 'Your token has expired'
+        return redirect(url_for('login', msg=msg))
+    except jwt.exceptions.DecodeError:
+        print("Received token:", token_receive)
+        msg = 'There was a problem logging you in'
+        return redirect(url_for('login', msg=msg))
+
 
 @app.route('/save/profil', methods=['POST'])
 def tambah_profil():
