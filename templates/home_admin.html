@@ -95,36 +95,48 @@
 
 <body>
 
-    <!-- Navigation -->
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg rounded fixed-top">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
+            aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <nav class="navbar navbar-expand-lg rounded fixed-top">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
-                aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-                <a class="navbar-brand col-lg-3 me-0" href="/">
-                    <img src="{{ url_for('static', filename='logo.jpeg') }}" style="width: 45px; height:45px" />
-                    <span class="fs-4 nav-font" style="font-weight:bold; color: white;">PPDB Santri</span>
-                </a>
-                <ul class="navbar-nav col-lg-6 justify-content-lg-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/home-admin">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pendaftaran">Pendaftaran</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pengumumanuser">Pengumuman</a>
-                    </li>
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+            <a class="navbar-brand col-lg-3 me-0" href="/">
+                <img src="{{ url_for('static', filename='logo.jpeg') }}" style="width: 45px; height:45px" />
+                <span class="fs-4 nav-font" style="font-weight:bold; color: white;">PPDB Santri</span>
+            </a>
+            <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home-admin">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/listpendaftar">Pendaftar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#validasi">Validasi Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pengumumanadmin">Pengumuman</a>
+                </li>
+            </ul>
         </div>
-    </nav>
-
-    <!-- End navbar -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
+                data-bs-display="static" aria-expanded="false">
+                <img src="static/profile_pics/profile_placeholder.png" alt="User Photo"
+                    class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+                <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End navbar -->
 
     <!-- Grafik -->
 
