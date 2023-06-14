@@ -59,14 +59,107 @@
         });
 
     </script>
+
+    <style>
+        * {
+            font-family: 'PT Sans', sans-serif;
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c4343;
+        }
+
+        .navbar {
+            background-color: #255555;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 10);
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .tbl {
+            padding: 25px;
+            border-radius: 10px;
+            background-color: white;
+            margin-top: 100px;
+            width: 800px;
+            box-shadow: 0px 13px 9px 24px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="mt-5">Grafik Pendaftaran</h1>
-        <canvas id="myChart"></canvas>
-    </div>
 
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg rounded fixed-top">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11"
+            aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+            <a class="navbar-brand col-lg-3 me-0" href="/">
+                <img src="{{ url_for('static', filename='logo.jpeg') }}" style="width: 45px; height:45px" />
+                <span class="fs-4 nav-font" style="font-weight:bold; color: white;">PPDB Santri</span>
+            </a>
+            <ul class="navbar-nav col-lg-6 justify-content-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home-admin">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/listpendaftar">Pendaftar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#validasi">Validasi Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pengumumanadmin">Pengumuman</a>
+                </li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
+                data-bs-display="static" aria-expanded="false">
+                <img src="static/profile_pics/profile_placeholder.png" alt="User Photo"
+                    class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+                <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End navbar -->
+
+    <!-- Grafik -->
+
+    <section id="grafik">
+        <h1 style="color: white; margin-top: 100px; margin-left: 400px;">Grafik Pendaftaran</h1>
+        <div class="container tbl mb-5" style="margin-top: auto;">
+            <canvas id="myChart"></canvas>
+        </div>
+    </section>
+
+    <!-- End Grafik -->
+
+
+    <!-- start footer -->
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top">
+            <p class="text-center text-light">PPDB Online © PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
+                SHOLIHIN - 2023 <a href="#"><i class="fa fa-long-arrow-up text-white"></i></a></p>
+        </footer>
+    </div>
+    
+    <!-- end footer -->
 
 </body>
 

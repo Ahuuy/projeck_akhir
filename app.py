@@ -168,12 +168,12 @@ def tambah_profil():
     profilename = f'static/profile_pics/profile-{mytime}.{extension}'
     foto.save(profilename)
 
-    nama = request.form['nama']
-    jenis_kelamin = request.form['jenis_kelamin']
-    alamat = request.form['alamat']
-    tempat_lahir = request.form['tempat_lahir']
-    tanggal_lahir_str = request.form['tanggal_lahir']
-    tanggal_lahir = datetime.strptime(tanggal_lahir_str, '%Y-%m-%d').date()
+    nama = request.form["nama"]
+    jenis_kelamin = request.form["jenis_kelamin"]
+    alamat = request.form["alamat"]
+    tempat_lahir = request.form["tempat_lahir"]
+    tanggal_lahir_str = request.form["tanggal_lahir"]
+    tanggal_lahir = datetime.strptime(tanggal_lahir_str, "%Y-%m-%d").date()
 
     # Simpan data ke MongoDB
     profil = {
