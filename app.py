@@ -103,42 +103,63 @@ def signin():
             "message": "fail",
             "error": "We could not find a user with that email/password combination"
         })
-@app.route("/ppdb-console")
+@app.route("/ppdb_console")
 def ppdb_console():
     return render_template("adminlogin.html")
 
 
-@app.route("/admin", methods=["POST"])
-def admin():
+@app.route("/login-admin", methods=["POST"])
+def login_admin():
     data = request.get_json()
     email = data["email"]
     password = data["password"]
+    pw_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    # Cari pengguna berdasarkan alamat email
-    user = db.admin.find_one({"email": email})
+    result = db.admin.find_one({"email": email, "password": pw_hash})
 
-    if user:
-        # Verifikasi password
-        hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-        if hashed_password == user["password"]:
-            # Buat token JWT
-            payload = {"email": email}
-            token = jwt.encode(
-                payload, str(app.config["SECRET_KEY"]), algorithm="HS256"
-            )
+    if result:
+        payload = {
+            "email": email,
+            "exp": datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
-            return jsonify({"message": "Berhasil login", "token": token})
-        else:
-            return jsonify({"message": "Email atau password salah"})
+        response = make_response(
+            jsonify({
+                "message": "success",
+                "email": email,
+                "token": token
+            })
+        )
+        response.set_cookie("token", token)
+        return response
+
     else:
-        return jsonify({"message": "Email atau password salah"})
+        return jsonify({
+            "message": "fail",
+            "error": "We could not find a user with that email/password combination"
+        })
 
 
 @app.route("/home-admin")
 def home_admin():
-    users = db.users.find_one({})
-    return render_template("home_admin.html", users=users)
-
+    token_receive = request.cookies.get("token")
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        email = payload.get('email')
+        user_info = db.admin.find_one({'email': email})
+        if user_info:
+            users = [user_info]  # Mengubah user_info menjadi list untuk mengatasi error Jinja2
+            return render_template('home_admin.html', users=users)  # Mengirimkan users ke template
+        else:
+            return redirect(url_for('ppdb_console'))
+    except jwt.ExpiredSignatureError:
+        msg = 'Your token has expired'
+        return redirect(url_for('ppdb_console', msg=msg))
+    except jwt.exceptions.DecodeError:
+        print("Received token:", token_receive)
+        msg = 'There was a problem logging you in'
+        return redirect(url_for('ppdb_console', msg=msg))
 
 @app.route('/data_jenis_kelamin')
 def data_jenis_kelamin():

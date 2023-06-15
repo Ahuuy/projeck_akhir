@@ -40,38 +40,39 @@
                 }
             });
 
-                //Login
-                $('#login-form').submit(function (event) {
-                    event.preventDefault(); // Menghentikan aksi default saat form disubmit
+            // Login
+            $('#login-form').submit(function (event) {
+                event.preventDefault(); // Menghentikan aksi default saat form disubmit
 
-                    let email = $('#mail').val();
-                    let password = $('#password').val();
+                let email = $('#mail').val();
+                let password = $('#password').val();
 
-                    // Kirim permintaan POST ke endpoint /signin
-                    $.ajax({
-                        url: '/admin',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ email: email, password: password }),
-                        success: function (response) {
-                            if (response.message === "Berhasil login") {
-                                // Tampilkan pesan berhasil login
-                                alert(response.message);
-                                // Arahkan ke halaman berikutnya setelah login berhasil
-                                window.location.href = '/dashboard';
-                            } else {
-                                // Tampilkan pesan kesalahan jika login gagal
-                                alert(response.message);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            // Tanggapan kesalahan dari server
-                            let errorMessage = JSON.parse(xhr.responseText).message;
-                            alert(errorMessage); // Tampilkan pesan kesalahan dari server
+                // Kirim permintaan POST ke endpoint /login-admin
+                $.ajax({
+                    url: '/login-admin',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ email: email, password: password }),
+                    success: function (response) {
+                        if (response.message === "success") {
+                            // Tampilkan pesan berhasil login
+                            alert("Berhasil login");
+                            // Arahkan ke halaman berikutnya setelah login berhasil
+                            window.location.href = '/home-admin';
+                        } else {
+                            // Tampilkan pesan kesalahan jika login gagal
+                            alert(response.error);
                         }
-                    });
+                    },
+                    error: function (xhr, status, error) {
+                        // Tanggapan kesalahan dari server
+                        let errorMessage = JSON.parse(xhr.responseText).error;
+                        alert(errorMessage); // Tampilkan pesan kesalahan dari server
+                    }
                 });
             });
+
+        });
     </script>
 </head>
 
