@@ -136,9 +136,10 @@
         </div>
         <div class="hero-text">
             <table>
+                {% for user in users %}
                 <tr>
                     <td><strong>Nama Peserta</strong></td>
-                    <td>: Uzumaki Naruto</td>
+                    <td>: {{ user.nama_lengkap }}</td>
                 </tr>
                 <tr>
                     <td><strong>Nomor Peserta</strong></td>
@@ -150,7 +151,7 @@
                 </tr>
                 <tr>
                     <td><strong>Hobi</strong></td>
-                    <td>: Makan Rame</td>
+                    <td>: {{ user.hobi }}</td>
                 </tr>
                 <tr>
                     <td><strong>Jadwal Ujian</strong></td>
@@ -160,6 +161,7 @@
                     <td><strong>Jadwal Wawancara</strong></td>
                     <td>: 25 Juli 2024 (Di Kelas B)</td>
                 </tr>
+                {% endfor %}
             </table>
         </div>
 

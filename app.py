@@ -383,7 +383,8 @@ def kirim_data(users):
     return "Data pengguna berhasil diperbarui"
 
 @app.route("/verifikasi")
-def verifikasi():
+@userTokenAuth
+def verifikasi(users):
     status = request.args.get('status')
     if status == 'menunggu':
         return render_template('verifikasi_data.html', status='Menunggu')
@@ -395,32 +396,45 @@ def verifikasi():
         return 'Status tidak valid'
     
 @app.route("/unduh-pdf", methods=['GET'])
-def unduh_pdf():
+@userTokenAuth
+def unduh_pdf(users):
     # Mendapatkan path direktori "Downloads" pengguna
     download_dir = os.path.expanduser("~/Downloads")
 
-    # Menentukan path lengkap file PDF tujuan
-    file_path = os.path.join(download_dir, "layout_kartu_ujian.pdf")
+    if users:
+        user = users[0]  # Ambil pengguna pertama dari daftar pengguna
+        nama_lengkap = user.get('nama_lengkap')
 
-    # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-    rendered_template = render_template("layout_kartu_ujian.html")
+        if nama_lengkap:
+            # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
+            file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
 
-    # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
-    pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
-        stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
-    )
+            # Menentukan path lengkap file PDF tujuan
+            file_path = os.path.join(download_dir, file_name)
 
-    # Simpan file PDF ke path tujuan
-    with open(file_path, 'wb') as file:
-        file.write(pdf)
+            # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+            rendered_template = render_template("layout_kartu_ujian.html", users=users)
 
-    # Kirim file PDF sebagai respons unduhan
-    return send_from_directory(directory=download_dir, path="layout_kartu_ujian.pdf", as_attachment=True)
+            # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+            pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+                stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+            )
+
+            # Simpan file PDF ke path tujuan
+            with open(file_path, 'wb') as file:
+                file.write(pdf)
+
+            # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
+            return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
+
+    return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
+
 
     
 @app.route("/unduh_kartu_ujian")
-def unduh_kartu_ujian():
-    return render_template("layout_kartu_ujian.html")
+@userTokenAuth
+def unduh_kartu_ujian(users):
+    return render_template("layout_kartu_ujian.html", users=users)
 
 
 @app.route("/profile")
