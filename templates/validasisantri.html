@@ -80,7 +80,8 @@
                         class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
-                    <li><a class="dropdown-item" href="/profile"><i class="fa fa-user" aria-hidden="true"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"
+                                aria-hidden="true"></i>Profile</a></li>
                     <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
                     </li>
                 </ul>
@@ -101,59 +102,78 @@
                         Silahkan cek kembali data milikmu pastikan data yang dimiliki sudah sesuai
                     </p>
                     <hr>
-                    <table>
-                        <tr>
-                            <td>Nama Lengkap</td>
-                            <td>{{ nama_lengkap }}</td>
-                        </tr>
-                        <tr>
-                            <td>Nama Panggilan</td>
-                            <td>{{ nama_panggilan }}</td>
-                        </tr>
-                        <tr>
-                            <td>Asal Tempat</td>
-                            <td>
-                            {% for province in provinces %}
-                                {% if province.id == asal_provinsi %}
+                    <form action="/kirim-data" method="POST">
+                        <table>
+                            <tr>
+                                <td>Nama Lengkap</td>
+                                <td>{{ nama_lengkap }}</td>
+                                <input type="hidden" name="nama_lengkap" value="{{ nama_lengkap }}">
+                            </tr>
+                            <tr>
+                                <td>Nama Panggilan</td>
+                                <td>{{ nama_panggilan }}</td>
+                                <input type="hidden" name="nama_panggilan" value="{{ nama_panggilan }}">
+                            </tr>
+                            <tr>
+                                <td>Asal Tempat</td>
+                                <td>
+                                    {% for province in provinces %}
+                                    {% if province.id == asal_provinsi %}
                                     {{ province.name }}
-                                {% endif %}
-                            {% endfor %}
-                            {% for city in cities %}
-                                {% if city.id == asal_kota %}
+                                    <input type="hidden" name="asal_provinsi" value="{{ province.id }}">
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% for city in cities %}
+                                    {% if city.id == asal_kota %}
                                     {{ city.name }}
-                                {% endif %}
-                            {% endfor %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jenis Kelamin</td>
-                            <td>{{ jenis_kelamin }}</td>
-                        </tr>
-                        <tr>
-                            <td>Nama Ayah & Ibu</td>
-                            <td>{{ nama_ayah }} {{ nama_ibu }}</td>
-                        </tr>
-                        <tr>
-                            <td>Hobi</td>
-                            <td>{{ hobi }}</td>
-                        </tr>
-                        <tr>
-                            <td>Cita-cita</td>
-                            <td>{{ cita_cita }}</td>
-                        </tr>
-                        <tr>
-                            <td>Bidang yang ditekuni</td>
-                            <td>{{ bidang }}</td>
-                        </tr>
-                        <tr>
-                            <td>Tokoh yang di Kagumi</td>
-                            <td>{{ tokoh }}</td>
-                        </tr>
-                        <tr>
-                            <td>Nomor Handphone/Whatsapp</td>
-                            <td>{{ nomor_hp }}</td>
-                        </tr>
-                    </table>
+                                    <input type="hidden" name="asal_kota" value="{{ city.id }}">
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jenis Kelamin</td>
+                                <td>{{ jenis_kelamin }}</td>
+                                <input type="hidden" name="jenis_kelamin" value="{{ jenis_kelamin }}">
+                            </tr>
+                            <tr>
+                                <td>Nama Ayah & Ibu</td>
+                                <td>{{ nama_ayah }} {{ nama_ibu }}</td>
+                                <input type="hidden" name="nama_ayah" value="{{ nama_ayah }}">
+                                <input type="hidden" name="nama_ibu" value="{{ nama_ibu }}">
+                            </tr>
+                            <tr>
+                                <td>Hobi</td>
+                                <td>{{ hobi }}</td>
+                                <input type="hidden" name="hobi" value="{{ hobi }}">
+                            </tr>
+                            <tr>
+                                <td>Cita-cita</td>
+                                <td>{{ cita_cita }}</td>
+                                <input type="hidden" name="cita_cita" value="{{ cita_cita }}">
+                            </tr>
+                            <tr>
+                                <td>Bidang yang ditekuni</td>
+                                <td>{{ bidang }}</td>
+                                <input type="hidden" name="bidang" value="{{ bidang }}">
+                            </tr>
+                            <tr>
+                                <td>Tokoh yang di Kagumi</td>
+                                <td>{{ tokoh }}</td>
+                                <input type="hidden" name="tokoh" value="{{ tokoh }}">
+                            </tr>
+                            <tr>
+                                <td>Nomor Handphone/Whatsapp</td>
+                                <td>{{ nomor_hp }}</td>
+                                <input type="hidden" name="nomor_hp" value="{{ nomor_hp }}">
+                            </tr>
+                        </table>
+                        <div class="text-center">
+                            <button class="btn btn-primary" type="submit">Kirim</button>
+                        </div>
+                    </form>
+
+                    <!-- ini data yang akan di kirim -->
 
                 </div>
             </div>

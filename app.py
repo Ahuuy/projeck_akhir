@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 from functools import wraps
+from bson.objectid import ObjectId
 import jwt
 import hashlib
 import os
@@ -314,7 +315,7 @@ def validasi(users):
     foto = request.files.get('foto')
     provinces = fetchProvinces()
     cities = fetchCities(asal_provinsi)
-
+    
 
     return render_template("validasisantri.html",
                             nama_lengkap=nama_lengkap,
@@ -333,8 +334,53 @@ def validasi(users):
                             cities=cities
                             )
 
+@app.route('/kirim-data', methods=['POST'])
+@userTokenAuth
+def kirim_data(users):
+    # Mendapatkan data dari form menggunakan request.form.get() atau request.form['nama_field']
+    # ...
 
-   
+    # Mengambil data yang ada dalam tag {{ }} dari form
+    nama_lengkap = request.form.get('nama_lengkap')
+    nama_panggilan = request.form.get('nama_panggilan')
+    asal_provinsi = request.form.get('asal_provinsi')
+    asal_kota = request.form.get('asal_kota')
+    jenis_kelamin = request.form.get('jenis_kelamin')
+    nama_ayah = request.form.get('nama_ayah')
+    nama_ibu = request.form.get('nama_ibu')
+    hobi = request.form.get('hobi')
+    cita_cita = request.form.get('cita_cita')
+    bidang = request.form.get('bidang')
+    tokoh = request.form.get('tokoh')
+    nomor_hp = request.form.get('nomor_hp')
+    
+    # Mengambil ID pengguna dari parameter users
+    user_id = ObjectId(users[0]['_id'])
+
+    # Menyiapkan data untuk pembaruan
+    form_data = {
+        "$set": {
+            "nama_lengkap": nama_lengkap,
+            "nama_panggilan": nama_panggilan,
+            "asal_provinsi": asal_provinsi,
+            "asal_kota": asal_kota,
+            "jenis_kelamin": jenis_kelamin,
+            "nama_ayah": nama_ayah,
+            "nama_ibu": nama_ibu,
+            "hobi": hobi,
+            "cita_cita": cita_cita,
+            "bidang": bidang,
+            "tokoh": tokoh,
+            "nomor_hp": nomor_hp,
+            "foto": None  # Menyimpan nama file foto jika ada
+        }
+    }
+
+    # Memperbarui dokumen pengguna berdasarkan ID pengguna
+    db.users.update_one({"_id": user_id}, form_data)
+
+    # Mengembalikan respons sukses tanpa merender template HTML
+    return "Data pengguna berhasil diperbarui"
 
 @app.route("/verifikasi")
 def verifikasi():
