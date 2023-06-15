@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from jwt.exceptions import ExpiredSignatureError, DecodeError
+from functools import wraps
 import jwt
 import hashlib
 import os
@@ -20,6 +21,30 @@ client = MongoClient(
     "mongodb://grup4kelompok1:kelompok1@ac-pgwmogi-shard-00-00.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-01.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-02.fl0gdtc.mongodb.net:27017/?ssl=true&replicaSet=atlas-jhyhsx-shard-0&authSource=admin&retryWrites=true&w=majority"
 )
 db = client.dbTester
+
+# Untuk Fungsi autentikasi user
+def userTokenAuth(view_func):
+    @wraps(view_func)
+    def decorator(*args, **kwargs):
+        token_receive = request.cookies.get("token")
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            email = payload.get('email')
+            user_info = db.users.find_one({'email': email})
+            if user_info:
+                users = [user_info]
+                return view_func(*args, users=users, **kwargs)
+            else:
+                return redirect(url_for('login'))
+        except jwt.ExpiredSignatureError:
+            msg = 'Your token has expired'
+            return redirect(url_for('login', msg=msg))
+        except jwt.exceptions.DecodeError:
+            print("Received token:", token_receive)
+            msg = 'There was a problem logging you in'
+            return redirect(url_for('login', msg=msg))
+
+    return decorator
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -179,24 +204,9 @@ def data_jenis_kelamin():
 
 
 @app.route('/dashboard', methods=['GET'])
-def dashboard():
-    token_receive = request.cookies.get("token")
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        email = payload.get('email')
-        user_info = db.users.find_one({'email': email})
-        if user_info:
-            users = [user_info]  # Mengubah user_info menjadi list untuk mengatasi error Jinja2
-            return render_template('index.html', users=users)  # Mengirimkan users ke template
-        else:
-            return redirect(url_for('login'))
-    except jwt.ExpiredSignatureError:
-        msg = 'Your token has expired'
-        return redirect(url_for('login', msg=msg))
-    except jwt.exceptions.DecodeError:
-        print("Received token:", token_receive)
-        msg = 'There was a problem logging you in'
-        return redirect(url_for('login', msg=msg))
+@userTokenAuth
+def dashboard(users):
+    return render_template('index.html', users=users)
 
 
 @app.route('/save/profil', methods=['POST'])
@@ -259,37 +269,36 @@ def update_profil():
 
 
 @app.route("/pendaftaran", methods=['GET', 'POST'])
-def pendaftaran():
-    return render_template("pendaftaran.html")
+@userTokenAuth
+def pendaftaran(users):
+    return render_template('pendaftaran.html')
 
-
-def fetch_provinces(api_key):
-    url = f'https://api.binderbyte.com/wilayah/provinsi?api_key={api_key}'
-
-    response = requests.get(url)
-    if response.status_code == 200:
-        provinces_data = response.json()
-        provinces = provinces_data.get('value')
-        return provinces
-    else:
-        return None
-
-
-def fetch_cities(api_key, province_id):
-    url = f"https://api.binderbyte.com/wilayah/kabupaten?id_provinsi={province_id}&api_key={api_key}"
+def fetchProvinces():
+    api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
+    url = f"https://api.binderbyte.com/wilayah/provinsi?api_key={api_key}"
 
     response = requests.get(url)
-    if response.status_code == 200:
-        cities_data = response.json()
-        cities = cities_data.get('value')
-        return cities
-    else:
-        return None
+    provinces = response.json()["value"]
+    
+    return provinces
 
+def fetchCities(provinceId):
+    api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
+    url = f"https://api.binderbyte.com/wilayah/kabupaten?api_key={api_key}&id_provinsi={provinceId}"
+
+    response = requests.get(url)
+    json_data = response.json()
+    
+    if "value" in json_data:
+        cities = json_data["value"]
+    else:
+        cities = []
+    
+    return cities
 
 @app.route("/validasi", methods=["GET", "POST"])
-def validasi():
-    api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
+@userTokenAuth
+def validasi(users):
     nama_lengkap = request.form.get('nama_lengkap')
     nama_panggilan = request.form.get('nama_panggilan')
     asal_provinsi = request.form.get('asal_provinsi')
@@ -303,14 +312,8 @@ def validasi():
     tokoh = request.form.get('tokoh')
     nomor_hp = request.form.get('nomor_hp')
     foto = request.files.get('foto')
-
-    # Mendapatkan data provinsi
-    provinces = fetch_provinces(api_key)
-
-    # Mendapatkan data kota berdasarkan provinsi terpilih
-    cities = None
-    if asal_provinsi:
-        cities = fetch_cities(api_key, asal_provinsi)
+    provinces = fetchProvinces()
+    cities = fetchCities(asal_provinsi)
 
 
     return render_template("validasisantri.html",
@@ -326,8 +329,12 @@ def validasi():
                             bidang=bidang,
                             tokoh=tokoh,
                             nomor_hp=nomor_hp,
-                            provinces=provinces,
-                            cities=cities)
+                            provinces = provinces,
+                            cities=cities
+                            )
+
+
+   
 
 @app.route("/verifikasi")
 def verifikasi():
