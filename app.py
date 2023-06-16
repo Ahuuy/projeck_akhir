@@ -47,6 +47,30 @@ def userTokenAuth(view_func):
 
     return decorator
 
+# Untuk Fungsi autentikasi admin
+def adminTokenAuth(view_func):
+    @wraps(view_func)
+    def decorator(*args, **kwargs):
+        token_receive = request.cookies.get("token")
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            email = payload.get('email')
+            user_info = db.admin.find_one({'email': email})
+            if user_info:
+                users = [user_info]
+                return view_func(*args, users=users, **kwargs)
+            else:
+                return redirect(url_for('login'))
+        except jwt.ExpiredSignatureError:
+            msg = 'Your token has expired'
+            return redirect(url_for('login', msg=msg))
+        except jwt.exceptions.DecodeError:
+            print("Received token:", token_receive)
+            msg = 'There was a problem logging you in'
+            return redirect(url_for('login', msg=msg))
+
+    return decorator
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -129,6 +153,8 @@ def signin():
             "message": "fail",
             "error": "We could not find a user with that email/password combination"
         })
+    
+
 @app.route("/ppdb_console")
 def ppdb_console():
     return render_template("adminlogin.html")
@@ -167,12 +193,11 @@ def login_admin():
         })
 
 
-@app.route("/home-admin", methods=['GET'])
-@userTokenAuth
-def home_admin(users):
-        jk = db.users.find_one({})
-        return render_template('home_admin.html', users=users, jk=jk) 
-
+@app.route("/home_admin", methods=['GET'])
+@adminTokenAuth
+def homeadmin(users):
+    grafik = db.users.find_one({})
+    return render_template('home_admin.html', users=users, grafik=grafik)
 
 @app.route('/data_jenis_kelamin')
 def data_jenis_kelamin():
