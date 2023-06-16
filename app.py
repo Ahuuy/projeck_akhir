@@ -9,7 +9,7 @@ import jwt
 import hashlib
 import os
 import requests
-# import weasyprint
+import weasyprint
 
 app = Flask(__name__)
 
@@ -60,14 +60,14 @@ def adminTokenAuth(view_func):
                 users = [user_info]
                 return view_func(*args, users=users, **kwargs)
             else:
-                return redirect(url_for('login'))
+                return redirect(url_for('ppdb_console'))
         except jwt.ExpiredSignatureError:
             msg = 'Your token has expired'
-            return redirect(url_for('login', msg=msg))
+            return redirect(url_for('ppdb_console', msg=msg))
         except jwt.exceptions.DecodeError:
             print("Received token:", token_receive)
             msg = 'There was a problem logging you in'
-            return redirect(url_for('login', msg=msg))
+            return redirect(url_for('ppdb_console', msg=msg))
 
     return decorator
 
@@ -390,39 +390,39 @@ def verifikasi(users):
     else:
         return 'Status tidak valid'
     
-# @app.route("/unduh-pdf", methods=['GET'])
-# @userTokenAuth
-# def unduh_pdf(users):
-#     # Mendapatkan path direktori "Downloads" pengguna
-#     download_dir = os.path.expanduser("~/Downloads")
+@app.route("/unduh-pdf", methods=['GET'])
+@userTokenAuth
+def unduh_pdf(users):
+    # Mendapatkan path direktori "Downloads" pengguna
+    download_dir = os.path.expanduser("~/Downloads")
 
-#     if users:
-#         user = users[0]  # Ambil pengguna pertama dari daftar pengguna
-#         nama_lengkap = user.get('nama_lengkap')
+    if users:
+        user = users[0]  # Ambil pengguna pertama dari daftar pengguna
+        nama_lengkap = user.get('nama_lengkap')
 
-#         if nama_lengkap:
-#             # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
-#             file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
+        if nama_lengkap:
+            # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
+            file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
 
-#             # Menentukan path lengkap file PDF tujuan
-#             file_path = os.path.join(download_dir, file_name)
+            # Menentukan path lengkap file PDF tujuan
+            file_path = os.path.join(download_dir, file_name)
 
-#             # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-#             rendered_template = render_template("layout_kartu_ujian.html", users=users)
+            # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+            rendered_template = render_template("layout_kartu_ujian.html", users=users)
 
-#             # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
-#             pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
-#                 stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
-#             )
+            # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+            pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+                stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+            )
 
-#             # Simpan file PDF ke path tujuan
-#             with open(file_path, 'wb') as file:
-#                 file.write(pdf)
+            # Simpan file PDF ke path tujuan
+            with open(file_path, 'wb') as file:
+                file.write(pdf)
 
-#             # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
-#             return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
+            # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
+            return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
 
-#     return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
+    return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
 
 
     
