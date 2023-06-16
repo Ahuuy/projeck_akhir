@@ -348,6 +348,8 @@ def kirim_data(users):
     bidang = request.form.get('bidang')
     tokoh = request.form.get('tokoh')
     nomor_hp = request.form.get('nomor_hp')
+    status = request.form.get('status')
+
     
     # Mengambil ID pengguna dari parameter users
     user_id = ObjectId(users[0]['_id'])
@@ -367,7 +369,7 @@ def kirim_data(users):
             "bidang": bidang,
             "tokoh": tokoh,
             "nomor_hp": nomor_hp,
-            "foto": None  # Menyimpan nama file foto jika ada
+            "status": status,
         }
     }
 
