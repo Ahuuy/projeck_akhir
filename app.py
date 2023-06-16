@@ -505,6 +505,16 @@ def list_pendaftar(admin):
     users = db.users.find()
     return render_template('listpendaftar.html', users=users)
 
+#validasi Data Calon Santri
+@app.route("/validasidata")
+def valid_data():
+    users = db.users.find()
+    return render_template('validasidata.html', users=users)
+
+@app.route("/editvalid")
+def edit_valid():
+    return render_template("editvalidasidata.html")
+
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
     app.run("0.0.0.0", port=5000, debug=True)
