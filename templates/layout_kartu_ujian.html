@@ -132,7 +132,9 @@
 
     <div class="hero justify-content-center">
         <div class="hero-image">
-            <img src="https://via.placeholder.com/300x400" alt="Placeholder Image" class="img-fluid">
+        {% for user in users %}
+            <img src="{{ user.foto or 'https://via.placeholder.com/300x400' }}" alt="User Image" class="img-fluid" width="300" height="400">
+        {% endfor %}
         </div>
         <div class="hero-text">
             <table>
@@ -147,7 +149,7 @@
                 </tr>
                 <tr>
                     <td><strong>Tempat, Tanggal Lahir</strong></td>
-                    <td>: Jawa Barat, Garut, 20 July 2001</td>
+                    <td>: {{ user.tempat_lahir }}, {{  user.tanggal_lahir }} </td>
                 </tr>
                 <tr>
                     <td><strong>Domisili</strong></td>

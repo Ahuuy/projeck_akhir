@@ -71,17 +71,17 @@ def adminTokenAuth(view_func):
 
     return decorator
 
-
+#UNTUK HALAMAN LANDING PAGE
 @app.route("/", methods=["GET", "POST"])
 def home():
     return render_template("landingpage.html")
 
-
+#UNTUK HALAMAN LOGIN/REGISTRASI
 @app.route("/login")
 def login():
     return render_template("loginregister.html")
 
-
+#UNTUK REGISTRASI AKUN
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
@@ -108,7 +108,7 @@ def signup():
 
     return jsonify({"message": "User registered successfully"})
 
-
+#UNTUK CEK EMAIL SUDAH DI PAKAI OLEH ORANG LAIN
 @app.route("/check-email", methods=["POST"])
 def check_email():
     data = request.get_json()
@@ -121,7 +121,7 @@ def check_email():
     else:
         return jsonify({"exists": False})
 
-
+#UNTUK MASUK SEBAGAI USER
 @app.route("/signin", methods=["POST"])
 def signin():
     data = request.get_json()
