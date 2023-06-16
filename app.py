@@ -9,7 +9,7 @@ import jwt
 import hashlib
 import os
 import requests
-import weasyprint
+# import weasyprint
 
 app = Flask(__name__)
 
@@ -167,36 +167,24 @@ def login_admin():
         })
 
 
-@app.route("/home-admin")
-def home_admin():
-    token_receive = request.cookies.get("token")
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        email = payload.get('email')
-        user_info = db.admin.find_one({'email': email})
-        if user_info:
-            users = [user_info]  # Mengubah user_info menjadi list untuk mengatasi error Jinja2
-            return render_template('home_admin.html', users=users)  # Mengirimkan users ke template
-        else:
-            return redirect(url_for('ppdb_console'))
-    except jwt.ExpiredSignatureError:
-        msg = 'Your token has expired'
-        return redirect(url_for('ppdb_console', msg=msg))
-    except jwt.exceptions.DecodeError:
-        print("Received token:", token_receive)
-        msg = 'There was a problem logging you in'
-        return redirect(url_for('ppdb_console', msg=msg))
+@app.route("/home-admin", methods=['GET'])
+@userTokenAuth
+def home_admin(users):
+        jk = db.users.find_one({})
+        return render_template('home_admin.html', users=users, jk=jk) 
+
 
 @app.route('/data_jenis_kelamin')
 def data_jenis_kelamin():
-    pendaftar = db.profile.find({}, {'jenis_kelamin': 1})  # Mengambil semua dokumen dengan hanya mengambil jenis_kelamin
+    pendaftar = db.users.find({}, {'jenis_kelamin': 1})  # Mengambil semua dokumen dengan hanya mengambil jenis_kelamin
     jumlah_laki_laki = 0
     jumlah_perempuan = 0
     for p in pendaftar:
-        if p['jenis_kelamin'] == 'male':
-            jumlah_laki_laki += 1
-        elif p['jenis_kelamin'] == 'female':
-            jumlah_perempuan += 1
+        if 'jenis_kelamin' in p:
+            if p['jenis_kelamin'] == 'laki-laki':
+                jumlah_laki_laki += 1
+            elif p['jenis_kelamin'] == 'perempuan':
+                jumlah_perempuan += 1
     data = {
         'laki_laki': jumlah_laki_laki,
         'perempuan': jumlah_perempuan
@@ -210,8 +198,17 @@ def dashboard(users):
     return render_template('index.html', users=users)
 
 
+
+@app.route("/profile",  methods=['GET'])
+@userTokenAuth
+def profile(users):
+    profile = db.users.find_one({'_id': ObjectId(users[0]['_id'])})
+    return render_template("profile.html", profile=profile, users=users)
+
+
 @app.route('/save/profil', methods=['POST'])
-def tambah_profil():
+@userTokenAuth
+def tambah_profil(users):
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
 
@@ -220,7 +217,6 @@ def tambah_profil():
     profilename = f'static/profile_pics/profile-{mytime}.{extension}'
     foto.save(profilename)
 
-    nama = request.form["nama"]
     jenis_kelamin = request.form["jenis_kelamin"]
     alamat = request.form["alamat"]
     tempat_lahir = request.form["tempat_lahir"]
@@ -229,44 +225,18 @@ def tambah_profil():
 
     # Simpan data ke MongoDB
     profil = {
-        'foto': profilename,
-        'nama': nama,
-        'jenis_kelamin': jenis_kelamin,
-        'alamat': alamat,
-        'tempat_lahir': tempat_lahir,
-        'tanggal_lahir': tanggal_lahir.strftime('%d-%m-%Y')  # Format tanggal yang diubah
+            'foto': profilename,
+            'jenis_kelamin': jenis_kelamin,
+            'alamat': alamat,
+            'tempat_lahir': tempat_lahir,
+            'tanggal_lahir': tanggal_lahir.strftime('%Y-%m-%d')
     }
-    db.profile.insert_one(profil)
+
+    # Menyimpan profil sesuai dengan ID pengguna saat registrasi
+    user_id = ObjectId(users[0]['_id'])
+    db.users.update_one({'_id': user_id}, {'$set': profil}, upsert=True)
 
     return 'Profil berhasil ditambahkan'
-
-@app.route('/update/profil', methods=['POST'])
-def update_profil():
-    today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-
-    foto = request.files['foto']
-    extension = foto.filename.split('.')[-1]
-    profilename = f'static/profile_pics/profile-{mytime}.{extension}'
-    foto.save(profilename)
-
-    nama = request.form['nama']
-    jenis_kelamin = request.form['jenis_kelamin']
-    alamat = request.form['alamat']
-    tempat_lahir = request.form['tempat_lahir']
-    tanggal_lahir = today.strptime(request.form['tanggal_lahir'], '%d-%m-%Y')
-
-    # Update data di MongoDB
-    db.profile.update_one({}, {'$set': {
-        'foto': profilename,
-        'nama': nama,
-        'jenis_kelamin': jenis_kelamin,
-        'alamat': alamat,
-        'tempat_lahir': tempat_lahir,
-        'tanggal_lahir': tanggal_lahir.strftime('%d-%m-%Y')
-    }})
-
-    return 'Profil berhasil diperbarui'
 
 
 @app.route("/pendaftaran", methods=['GET', 'POST'])
@@ -395,39 +365,39 @@ def verifikasi(users):
     else:
         return 'Status tidak valid'
     
-@app.route("/unduh-pdf", methods=['GET'])
-@userTokenAuth
-def unduh_pdf(users):
-    # Mendapatkan path direktori "Downloads" pengguna
-    download_dir = os.path.expanduser("~/Downloads")
+# @app.route("/unduh-pdf", methods=['GET'])
+# @userTokenAuth
+# def unduh_pdf(users):
+#     # Mendapatkan path direktori "Downloads" pengguna
+#     download_dir = os.path.expanduser("~/Downloads")
 
-    if users:
-        user = users[0]  # Ambil pengguna pertama dari daftar pengguna
-        nama_lengkap = user.get('nama_lengkap')
+#     if users:
+#         user = users[0]  # Ambil pengguna pertama dari daftar pengguna
+#         nama_lengkap = user.get('nama_lengkap')
 
-        if nama_lengkap:
-            # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
-            file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
+#         if nama_lengkap:
+#             # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
+#             file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
 
-            # Menentukan path lengkap file PDF tujuan
-            file_path = os.path.join(download_dir, file_name)
+#             # Menentukan path lengkap file PDF tujuan
+#             file_path = os.path.join(download_dir, file_name)
 
-            # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-            rendered_template = render_template("layout_kartu_ujian.html", users=users)
+#             # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+#             rendered_template = render_template("layout_kartu_ujian.html", users=users)
 
-            # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
-            pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
-                stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
-            )
+#             # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+#             pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+#                 stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+#             )
 
-            # Simpan file PDF ke path tujuan
-            with open(file_path, 'wb') as file:
-                file.write(pdf)
+#             # Simpan file PDF ke path tujuan
+#             with open(file_path, 'wb') as file:
+#                 file.write(pdf)
 
-            # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
-            return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
+#             # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
+#             return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
 
-    return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
+#     return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
 
 
     
@@ -435,12 +405,6 @@ def unduh_pdf(users):
 @userTokenAuth
 def unduh_kartu_ujian(users):
     return render_template("layout_kartu_ujian.html", users=users)
-
-
-@app.route("/profile")
-def profile():
-    profile = db.profile.find_one({})
-    return render_template("profile.html", profile=profile)
 
 
 # Pengumuman

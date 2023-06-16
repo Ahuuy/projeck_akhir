@@ -86,81 +86,6 @@
                     }
                 });
             });
-
-
-            // edit dan update profil
-            $('#update-button').click(function () {
-                var fileInput = $('#profile-image-input')[0];
-                var profileData = new FormData();
-                profileData.append('foto', fileInput.files[0]);
-                profileData.append('nama', $('#full-name').val());
-                profileData.append('jenis_kelamin', $('#gender').val());
-                profileData.append('alamat', $('#address').val());
-                profileData.append('tempat_lahir', $('#birthplace').val());
-                profileData.append('tanggal_lahir', $('#birthdate').val());
-
-                $.ajax({
-                    url: '/update/profil',
-                    type: 'POST',
-                    data: profileData,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        // Tampilkan pesan sukses atau lakukan tindakan lain
-                        alert(response);
-                        window.location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        // Tampilkan pesan error atau lakukan penanganan kesalahan
-                        alert('Terjadi kesalahan saat memperbarui profil.');
-                    }
-                });
-            });
-
-
-            // Fungsi untuk mengaktifkan mode edit
-            function enableEditMode() {
-                // Menghapus atribut readonly dan disabled
-                $("#full-name").removeAttr("readonly");
-                $("#gender").removeAttr("disabled");
-                $("#address").removeAttr("readonly");
-                $("#birthplace").removeAttr("readonly");
-                $("#birthdate").removeAttr("readonly");
-
-                // Mengubah tampilan tombol
-                $("#edit-button").hide();
-                $("#save-profile-form").hide();
-                $("#update-button").show();
-            }
-
-            // Fungsi untuk menonaktifkan mode edit
-            function disableEditMode() {
-                // Menambahkan atribut readonly dan disabled
-                $("#full-name").attr("readonly", true);
-                $("#gender").attr("disabled", true);
-                $("#address").attr("readonly", true);
-                $("#birthplace").attr("readonly", true);
-                $("#birthdate").attr("readonly", true);
-
-                // Mengubah tampilan tombol
-                $("#edit-button").show();
-                $("#save-profile-form").show();
-                $("#update-button").hide();
-            }
-
-            // Menonaktifkan tombol "Update" saat halaman dimuat
-            $("#update-button").hide();
-
-            // Mengaktifkan mode edit saat tombol "Edit" diklik
-            $("#edit-button").click(function () {
-                enableEditMode();
-            });
-
-            // Menonaktifkan mode edit saat tombol "Update" diklik
-            $("#update-button").click(function () {
-                disableEditMode();
-            });
-
         });
     </script>
     <style>
@@ -261,20 +186,14 @@
                                 <div class="mb-3">
                                     <label for="full-name" class="form-label">Nama Lengkap</label>
                                     <input type="text" class="form-control" id="full-name" placeholder="Nama Lengkap"
-                                        value="{{ profile.nama }}">
+                                        value="{{ profile.first_name }} {{ profile.last_name }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="gender" class="form-label">Jenis Kelamin</label>
                                     <select class="form-select" id="gender">
-                                        <option value="male" {% if profile.jenis_kelamin=='male' %}selected{% endif %}>
-                                            Laki-laki
-                                        </option>
-                                        <option value="female" {% if profile.jenis_kelamin=='female' %}selected{% endif %}>
-                                            Perempuan
-                                        </option>
-                                        <option value="other" {% if profile.jenis_kelamin=='other' %}selected{% endif %}>
-                                            Lainnya
-                                        </option>
+                                        <option value="laki-laki" {% if profile.jenis_kelamin == 'laki-laki' %}selected{% endif %}>Laki-laki</option>
+                                        <option value="perempuan" {% if profile.jenis_kelamin == 'perempuan' %}selected{% endif %}>Perempuan</option>
+                                        <option value="other" {% if profile.jenis_kelamin == 'other' %}selected{% endif %}>Lainnya</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -289,19 +208,12 @@
                                     </div>
                                     <div class="col">
                                         <label for="birthdate" class="form-label">Tanggal Lahir</label>
-                                        <input type="text" class="form-control" id="birthdate"
-                                            value="{{ profile.tanggal_lahir }}">
+                                        <input type="date" class="form-control" id="birthdate" value="{{ profile.tanggal_lahir }}">
                                     </div>
                                 </div>
                                 <div class="mb-3 text-end">
                                     <button type="submit" class="btn btn-primary" id="save-profile-form">
                                         <i class="fa-solid fa-floppy-disk"></i> Simpan
-                                    </button>
-                                    <button type="button" class="btn btn-primary" id="update-button">
-                                        <i class="fa-solid fa-pen-to-square"></i> Update
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" id="edit-button">
-                                        <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </button>
                                 </div>
                             </form>
@@ -311,6 +223,7 @@
             </div>
         </div>
     </div>
+    
     
 </body>
 
