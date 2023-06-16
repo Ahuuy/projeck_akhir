@@ -380,7 +380,7 @@ def kirim_data(users):
     db.users.update_one({"_id": user_id}, form_data)
 
     # Mengembalikan respons sukses tanpa merender template HTML
-    return "Data pengguna berhasil diperbarui"
+    return redirect(url_for('verifikasi', status='menunggu'))
 
 @app.route("/verifikasi")
 @userTokenAuth

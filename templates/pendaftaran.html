@@ -151,25 +151,25 @@
                         <div class="mb-3">
                             <label for="nama-lengkap" class="form-label">Nama Lengkap</label>
                             <input type="text" class="form-control" id="nama-lengkap" name="nama_lengkap"
-                                placeholder="Nama Lengkap">
+                                placeholder="Nama Lengkap" required>
                         </div>
                         <div class="mb-3">
                             <label for="nama-panggilan" class="form-label">Nama Panggilan</label>
                             <input type="text" class="form-control" id="nama-panggilan" name="nama_panggilan"
-                                placeholder="Nama Panggilan">
+                                placeholder="Nama Panggilan" required>
                         </div>
                         <div class="mb-3">
                             <label for="province" class="form-label">Asal Provinsi</label>
                             <select class="form-select select2" id="province" name="asal_provinsi"
-                                onchange="fetchCities()"></select>
+                                onchange="fetchCities()" required></select>
                         </div>
                         <div class="mb-3">
                             <label for="city" class="form-label">Asal Kota</label>
-                            <select class="form-select select2" id="city" name="asal_kota" disabled></select>
+                            <select class="form-select select2" id="city" name="asal_kota" disabled required></select>
                         </div>
                         <div class="mb-3">
                             <label for="gender" class="form-label">Jenis Kelamin</label>
-                            <select class="form-select" id="gender" name="jenis_kelamin">
+                            <select class="form-select" id="gender" name="jenis_kelamin" required>
                                 <option value="">-- Pilih Jenis Kelamin --</option>
                                 <option value="laki-laki">Laki Laki</option>
                                 <option value="perempuan">Perempuan</option>
@@ -178,34 +178,34 @@
                         <div class="mb-3">
                             <label for="nama-ayah" class="form-label">Nama Ayah</label>
                             <input type="text" class="form-control" id="nama-ayah" name="nama_ayah"
-                                placeholder="Nama Ayah">
+                                placeholder="Nama Ayah" required>
                         </div>
                         <div class="mb-3">
                             <label for="nama-ibu" class="form-label">Nama Ibu</label>
                             <input type="text" class="form-control" id="nama-ibu" name="nama_ibu"
-                                placeholder="Nama Ibu">
+                                placeholder="Nama Ibu" required>
                         </div>
                         <div class="mb-3">
                             <label for="hobi" class="form-label">Hobi</label>
-                            <input type="text" class="form-control" id="hobi" name="hobi" placeholder="Hobi">
+                            <input type="text" class="form-control" id="hobi" name="hobi" placeholder="Hobi" required>
                         </div>
                         <div class="mb-3">
                             <label for="cita-cita" class="form-label">Cita-Cita</label>
                             <input type="text" class="form-control" id="cita-cita" name="cita_cita"
-                                placeholder="Cita-Cita">
+                                placeholder="Cita-Cita" required>
                         </div>
                         <div class="mb-3">
                             <label for="bidang" class="form-label">Bidang Yang di Tekuni</label>
-                            <input type="text" class="form-control" id="bidang" name="bidang" placeholder="Programmer">
+                            <input type="text" class="form-control" id="bidang" name="bidang" placeholder="Programmer" required>
                         </div>
                         <div class="mb-3">
                             <label for="tokoh" class="form-label">Tokoh Yang di Kagumi</label>
-                            <input type="text" class="form-control" id="tokoh" name="tokoh" placeholder="Soekarno">
+                            <input type="text" class="form-control" id="tokoh" name="tokoh" placeholder="Soekarno" required>
                         </div>
                         <div class="mb-3">
                             <label for="nomor-hp" class="form-label">Nomor HP/Whatsapp</label>
                             <input type="number" class="form-control" id="nomor-hp" name="nomor_hp"
-                                placeholder="08590909090">
+                                placeholder="08590909090" required>
                         </div>
                         <div class="mb-3">
                             <label for="foto" class="form-label">Dokumen</label>
