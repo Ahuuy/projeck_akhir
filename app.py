@@ -15,6 +15,8 @@ app = Flask(__name__)
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
+app.config['UPLOAD_FOLDER'] = 'static/dokumen_calon_santri'
+
 SECRET_KEY = "secret_key"
 TOKEN_KEY = "KELOMPOK1"
 
@@ -307,7 +309,8 @@ def validasi(users):
     bidang = request.form.get('bidang')
     tokoh = request.form.get('tokoh')
     nomor_hp = request.form.get('nomor_hp')
-    foto = request.files.get('foto')
+    dokumen = request.files.get('dokumen')
+    file_name = secure_filename(dokumen.filename) if dokumen else None
     provinces = fetchProvinces()
     cities = fetchCities(asal_provinsi)
     
@@ -326,14 +329,13 @@ def validasi(users):
                             tokoh=tokoh,
                             nomor_hp=nomor_hp,
                             provinces = provinces,
-                            cities=cities
+                            cities=cities,
+                            file_name=file_name
                             )
 
 @app.route('/kirim-data', methods=['POST'])
 @userTokenAuth
 def kirim_data(users):
-    # Mendapatkan data dari form menggunakan request.form.get() atau request.form['nama_field']
-    # ...
 
     # Mengambil data yang ada dalam tag {{ }} dari form
     nama_lengkap = request.form.get('nama_lengkap')
@@ -349,6 +351,12 @@ def kirim_data(users):
     tokoh = request.form.get('tokoh')
     nomor_hp = request.form.get('nomor_hp')
     status = request.form.get('status')
+
+    # Mengambil nama file dokumen yang diunggah
+    file = request.files['dokumen']
+    extension = file.filename.split('.')[-1]
+    filename = f'static/dokumen_calon_santri/dokumen_{nama_lengkap}.{extension}'
+    file.save(filename)
 
     
     # Mengambil ID pengguna dari parameter users
@@ -370,11 +378,13 @@ def kirim_data(users):
             "tokoh": tokoh,
             "nomor_hp": nomor_hp,
             "status": status,
-        }
+            "dokumen": filename}
     }
 
     # Memperbarui dokumen pengguna berdasarkan ID pengguna
     db.users.update_one({"_id": user_id}, form_data)
+
+   
 
     # Mengembalikan respons sukses tanpa merender template HTML
     return redirect(url_for('verifikasi', status='menunggu'))
