@@ -55,10 +55,10 @@ def adminTokenAuth(view_func):
         try:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
             email = payload.get('email')
-            user_info = db.admin.find_one({'email': email})
-            if user_info:
-                users = [user_info]
-                return view_func(*args, users=users, **kwargs)
+            admin_info = db.admin.find_one({'email': email})
+            if admin_info:
+                admin = [admin_info]
+                return view_func(*args, admin=admin, **kwargs)
             else:
                 return redirect(url_for('ppdb_console'))
         except jwt.ExpiredSignatureError:
@@ -195,9 +195,9 @@ def login_admin():
 
 @app.route("/home_admin", methods=['GET'])
 @adminTokenAuth
-def homeadmin(users):
+def homeadmin(admin):
     grafik = db.users.find_one({})
-    return render_template('home_admin.html', users=users, grafik=grafik)
+    return render_template('home_admin.html', grafik=grafik, admin=admin)
 
 @app.route('/data_jenis_kelamin')
 def data_jenis_kelamin():
@@ -434,7 +434,8 @@ def unduh_kartu_ujian(users):
 
 # Pengumuman
 @app.route("/inputpengumuman", methods=["GET", "POST"])
-def pengumuman():
+@adminTokenAuth
+def pengumuman(admin):
     if request.method == "POST":
         tglpengumuman = request.form["tglpengumuman"]
         isipengumuman = request.form["isipengumuman"]
@@ -498,7 +499,8 @@ def pengumumanuser_():
 
 #list pendaftar
 @app.route('/listpendaftar')
-def list_pendaftar():
+@adminTokenAuth
+def list_pendaftar(admin):
     users = db.users.find()
     return render_template('listpendaftar.html', users=users)
 
