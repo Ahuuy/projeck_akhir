@@ -43,4 +43,10 @@ body {
 
 #imgsyarat {
     border-radius: 10px 50px 10px 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 10);
+}
+
+#btnalur {
+    background-image: linear-gradient(to top, rgb(165, 165, 165), rgb(209, 91, 91));
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 10);
 }
