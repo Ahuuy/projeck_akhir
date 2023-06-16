@@ -499,8 +499,8 @@ def pengumumanuser_():
 #list pendaftar
 @app.route('/listpendaftar')
 def list_pendaftar():
-    pendaftar = db.profile.find()
-    return render_template('listpendaftar.html', pendaftar=pendaftar)
+    users = db.users.find()
+    return render_template('listpendaftar.html', users=users)
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD

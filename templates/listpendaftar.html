@@ -139,12 +139,12 @@
                                                     <th>Jenis Kelamin</th>
                                             </thead>
                                             <tbody id="tbody-box">
-                                                {% for calon in pendaftar %}
+                                                {% for user in users %}
                                                 <tr>
                                                     <td>{{ loop.index }}</td>
-                                                    <td class="text-start">{{ calon.nama }}</td>
-                                                    <td class="text-start">{{ calon.tanggal_lahir }}</td>
-                                                    <td class="text-start">{{ calon.jenis_kelamin }} </td>
+                                                    <td class="text-start">{{ user.first_name }} {{ user.last_name }}</td>
+                                                    <td class="text-start">{{ user.tanggal_lahir }}</td>
+                                                    <td class="text-start">{{ user.jenis_kelamin }} </td>
                                                 </tr>
                                                 {% endfor %}
 
