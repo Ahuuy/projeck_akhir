@@ -455,7 +455,8 @@ def pengumuman(admin):
 
 
 @app.route("/pengumumanadmin")
-def isi_pengumuman():
+@adminTokenAuth
+def isi_pengumuman(admin):
     pengumumanadmin = db.pengumuman.find()
 
     return render_template("pengumumanadmin.html", pengumumanadmin=pengumumanadmin)
