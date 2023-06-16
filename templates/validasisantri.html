@@ -120,13 +120,13 @@
                                     {% for province in provinces %}
                                     {% if province.id == asal_provinsi %}
                                     {{ province.name }}
-                                    <input type="hidden" name="asal_provinsi" value="{{ province.id }}">
+                                    <input type="hidden" name="asal_provinsi" value="{{ province.name }}">
                                     {% endif %}
                                     {% endfor %}
                                     {% for city in cities %}
                                     {% if city.id == asal_kota %}
                                     {{ city.name }}
-                                    <input type="hidden" name="asal_kota" value="{{ city.id }}">
+                                    <input type="hidden" name="asal_kota" value="{{ city.name }}">
                                     {% endif %}
                                     {% endfor %}
                                 </td>
