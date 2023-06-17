@@ -28,11 +28,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#btnhapus').click(function () {
-                Swal.fire('Data Berhasil di Hapus!', '', 'success');
-            });
-        });
     </script>
     <style>
         * {
@@ -65,6 +60,12 @@
             box-shadow: 0px 13px 9px 24px rgba(0, 0, 0, 0.1);
         }
     </style>
+    <script>
+        function redirectToValidasi(userId) {
+            var url = "/validasi?id=" + userId;
+            window.location.href = url;
+        }
+    </script>
 
 
 </head>
@@ -137,7 +138,7 @@
                                                     <th class="col-sm-2">Tanggal Lahir</th>
                                                     <th class="col-sm-2">Jenis Kelamin</th>
                                                     <th>Status</th>
-                                                    <th>Aksi</th>
+                                                    <th>Detail Pendaftar</th>
 
                                             </thead>
                                             <tbody id="tbody-box">
@@ -147,17 +148,23 @@
                                                     <td class="text-center">{{ user.first_name }} {{ user.last_name }}
                                                     </td>
                                                     <td class="text-center">{{ user.tanggal_lahir }}</td>
-                                                    <td class="text-center">{{ user.jenis_kelamin }} </td>
-                                                    <td class="text-center">Tervalidasi</td> <!-- belum dibuat jinja -->
-                                                    <td><a type="button" class="btn btn-outline-warning flex-fill mr-2"
-                                                            href="/editvalid"><i class="fa fa-pencil-square-o"
-                                                                aria-hidden="true"></i>
-                                                            Update Data</a></td> <!-- buttonnya masih error -->
+                                                    <td class="text-center">{{ user.jenis_kelamin }}</td>
+                                                    <td class="text-center">{{ user.status }}</td>
+                                                    <td class="text-center">
+                                                        <button class="btn-primary"
+                                                            onclick="redirectToValidasi('{{ user._id }}')">Cek
+                                                            Detail</button>
+                                                    </td>
+                                                    <td>
+                                                        <a type="button" class="btn btn-outline-warning flex-fill mr-2"
+                                                            href="/editvalid/{{ user.id }}">
+                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                            Update Data
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 {% endfor %}
-
                                             </tbody>
-                                        </table>
                                     </div>
                                 </div>
 

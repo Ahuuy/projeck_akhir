@@ -74,7 +74,7 @@
 
                     cities.forEach(function (city) {
                         var option = document.createElement("option");
-                        option.value = city.id;
+                        option.value = city.name;
                         option.text = city.name;
                         citySelect.appendChild(option);
                     });
@@ -211,6 +211,7 @@
                             <label for="foto" class="form-label">Dokumen</label>
                             <input class="form-control" type="file" id="dokumen" name="dokumen">
                         </div>
+                        <input type="hidden" name="status" value="menunggu">
                         <div class="centerdiv">
                             <div class="text-center">
                                 <button class="btn btn-primary" type="submit">Kirim</button>

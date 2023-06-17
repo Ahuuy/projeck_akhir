@@ -99,83 +99,55 @@
             <div class="card">
                 <div class="card-body px-5 py-5">
                     <h1 class="reg-title">Validasi data santri</h1>
-                    <p> Selamat! Kami ingin memberitahukan bahwa pendaftaran Anda sebagai calon santri telah berhasil
-                        kami terima.
-                        Saat ini, data dan dokumen yang Anda kirimkan sedang dalam tahap pengecekan.
-                        Silahkan cek kembali data milikmu pastikan data yang dimiliki sudah sesuai
+                    <h2 style="text-align: center;"> Berikut adalah data santri {{ user.nama_lengkap }}</h2>
                     </p>
                     <hr>
-                    <form action="/kirim-data" method="POST">
-                        <table>
-                            <tr>
-                                <td>Nama Lengkap</td>
-                                <td>{{ nama_lengkap }}</td>
-                                <input type="hidden" name="nama_lengkap" value="{{ nama_lengkap }}">
-                            </tr>
-                            <tr>
-                                <td>Nama Panggilan</td>
-                                <td>{{ nama_panggilan }}</td>
-                                <input type="hidden" name="nama_panggilan" value="{{ nama_panggilan }}">
-                            </tr>
-                            <tr>
-                                <td>Asal Tempat</td>
-                                <td>
-                                    {% for province in provinces %}
-                                    {% if province.id == asal_provinsi %}
-                                    {{ province.name }}
-                                    <input type="hidden" name="asal_provinsi" value="{{ province.name }}">
-                                    {% endif %}
-                                    {% endfor %}
-                                    {% for city in cities %}
-                                    {% if city.id == asal_kota %}
-                                    {{ city.name }}
-                                    <input type="hidden" name="asal_kota" value="{{ city.name }}">
-                                    {% endif %}
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Jenis Kelamin</td>
-                                <td>{{ jenis_kelamin }}</td>
-                                <input type="hidden" name="jenis_kelamin" value="{{ jenis_kelamin }}">
-                            </tr>
-                            <tr>
-                                <td>Nama Ayah & Ibu</td>
-                                <td>{{ nama_ayah }} {{ nama_ibu }}</td>
-                                <input type="hidden" name="nama_ayah" value="{{ nama_ayah }}">
-                                <input type="hidden" name="nama_ibu" value="{{ nama_ibu }}">
-                            </tr>
-                            <tr>
-                                <td>Hobi</td>
-                                <td>{{ hobi }}</td>
-                                <input type="hidden" name="hobi" value="{{ hobi }}">
-                            </tr>
-                            <tr>
-                                <td>Cita-cita</td>
-                                <td>{{ cita_cita }}</td>
-                                <input type="hidden" name="cita_cita" value="{{ cita_cita }}">
-                            </tr>
-                            <tr>
-                                <td>Bidang yang ditekuni</td>
-                                <td>{{ bidang }}</td>
-                                <input type="hidden" name="bidang" value="{{ bidang }}">
-                            </tr>
-                            <tr>
-                                <td>Tokoh yang di Kagumi</td>
-                                <td>{{ tokoh }}</td>
-                                <input type="hidden" name="tokoh" value="{{ tokoh }}">
-                            </tr>
-                            <tr>
-                                <td>Nomor Handphone/Whatsapp</td>
-                                <td>{{ nomor_hp }}</td>
-                                <input type="hidden" name="nomor_hp" value="{{ nomor_hp }}">
-                                <input type="hidden" name="status" value="menunggu">
-                            </tr>
-                        </table>
-                        <div class="text-center">
-                            <button class="btn btn-primary" type="submit">Kirim</button>
-                        </div>
-                    </form>
+                    <table>
+                        <tr>
+                            <td>Nama Lengkap</td>
+                            <td>{{ user.nama_lengkap }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nama Panggilan</td>
+                            <td>{{ user.nama_panggilan }}</td>
+                        </tr>
+                        <tr>
+                            <td>Domisili</td>
+                            <td>{{ user.asal_provinsi }} {{ user.asal_kota }}</td>
+                        </tr>
+                        <tr>
+                            <td>Jenis Kelamin</td>
+                            <td>{{ user.jenis_kelamin }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nama Ayah & Ibu</td>
+                            <td>{{ user.nama_ayah }} {{ user.nama_ibu }}</td>
+                        </tr>
+                        <tr>
+                            <td>Hobi</td>
+                            <td>{{ user.hobi }}</td>
+                        </tr>
+                        <tr>
+                            <td>Cita-cita</td>
+                            <td>{{ user.cita_cita }}</td>
+                        </tr>
+                        <tr>
+                            <td>Bidang yang ditekuni</td>
+                            <td>{{ user.bidang }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tokoh yang di Kagumi</td>
+                            <td>{{ user.tokoh }}</td>
+                        </tr>
+                        <tr>
+                            <td>Nomor Handphone/Whatsapp</td>
+                            <td>{{ user.nomor_hp }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dokumen</td>
+                            <td>belum di apa apain</td>
+                        </tr>
+                    </table>                       
 
                     <!-- ini data yang akan di kirim -->
 

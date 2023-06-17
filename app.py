@@ -294,44 +294,7 @@ def fetchCities(provinceId):
     
     return cities
 
-@app.route("/validasi", methods=["GET", "POST"])
-@userTokenAuth
-def validasi(users):
-    nama_lengkap = request.form.get('nama_lengkap')
-    nama_panggilan = request.form.get('nama_panggilan')
-    asal_provinsi = request.form.get('asal_provinsi')
-    asal_kota = request.form.get('asal_kota')
-    jenis_kelamin = request.form.get('jenis_kelamin')
-    nama_ayah = request.form.get('nama_ayah')
-    nama_ibu = request.form.get('nama_ibu')
-    hobi = request.form.get('hobi')
-    cita_cita = request.form.get('cita_cita')
-    bidang = request.form.get('bidang')
-    tokoh = request.form.get('tokoh')
-    nomor_hp = request.form.get('nomor_hp')
-    dokumen = request.files.get('dokumen')
-    file_name = secure_filename(dokumen.filename) if dokumen else None
-    provinces = fetchProvinces()
-    cities = fetchCities(asal_provinsi)
-    
 
-    return render_template("validasisantri.html",
-                            nama_lengkap=nama_lengkap,
-                            nama_panggilan=nama_panggilan,
-                            asal_provinsi=asal_provinsi,
-                            asal_kota=asal_kota,
-                            jenis_kelamin=jenis_kelamin,
-                            nama_ayah=nama_ayah,
-                            nama_ibu=nama_ibu,
-                            hobi=hobi,
-                            cita_cita=cita_cita,
-                            bidang=bidang,
-                            tokoh=tokoh,
-                            nomor_hp=nomor_hp,
-                            provinces = provinces,
-                            cities=cities,
-                            file_name=file_name
-                            )
 
 @app.route('/kirim-data', methods=['POST'])
 @userTokenAuth
@@ -522,6 +485,58 @@ def list_pendaftar(admin):
 def valid_data():
     users = db.users.find()
     return render_template('validasidata.html', users=users)
+
+
+
+@app.route('/validasi', methods=['GET'])
+def validasi():
+    # Mendapatkan ID user dari parameter URL
+    user_id = request.args.get('id')
+
+    # Ambil data user dari MongoDB berdasarkan ID
+    user = get_user_from_mongodb(user_id)
+
+    asal_provinsi = user.get('asal_provinsi')
+    asal_provinsi = fetchProvinces()
+
+
+    # Mengirimkan data user ke template validasisantri.html
+    return render_template('validasisantri.html', user=user, asal_provinsi=asal_provinsi)
+
+def fetchProvinceById(provinceId):
+    api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
+    url = f"https://api.binderbyte.com/wilayah/provinsi?api_key={api_key}"
+
+    response = requests.get(url)
+    provinces = response.json()["value"]
+
+    # Mencari provinsi dengan ID yang sesuai
+    for province in provinces:
+        if province["id"] == provinceId:
+            return province
+
+    # Jika ID provinsi tidak ditemukan, kembalikan None
+    return None
+
+# Fungsi untuk mengambil data user dari MongoDB berdasarkan ID
+def get_user_from_mongodb(user_id):
+    # Kode untuk mengambil data user dari MongoDB berdasarkan ID
+    # Gantikan dengan implementasi Anda sendiri
+    # Contoh:
+    user = db.users.find_one({'_id': ObjectId(user_id)})  # Menggunakan ObjectId untuk mencocokkan _id
+
+    # Mendapatkan ID provinsi dari data user
+    provinsi_id = user.get('asal_provinsi')
+
+    # Mendapatkan nama provinsi berdasarkan ID provinsi dari API
+    provinsi = fetchProvinceById(provinsi_id)
+    nama_provinsi = provinsi.get('name')
+
+    # Menambahkan informasi nama provinsi ke dalam data user
+    user['asal_provinsi'] = nama_provinsi
+
+    return user
+
 
 @app.route("/editvalid")
 def edit_valid():
