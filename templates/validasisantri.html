@@ -44,6 +44,12 @@
             background-color: #dddddd;
         }
     </style>
+    <script>
+        function unduhDokumen(namaLengkap) {
+            var fileName = "dokumen_" + namaLengkap + ".zip";
+            window.location.href = "/static/dokumen_calon_santri/" + fileName;
+        }
+    </script>
 </head>
 
 <body>
@@ -145,9 +151,9 @@
                         </tr>
                         <tr>
                             <td>Dokumen</td>
-                            <td>belum di apa apain</td>
+                            <td><button class="btn btn-primary" onclick="unduhDokumen('{{ user.nama_lengkap }}')">Unduh Dokumen</button></td>
                         </tr>
-                    </table>                       
+                    </table>
 
                     <!-- ini data yang akan di kirim -->
 
