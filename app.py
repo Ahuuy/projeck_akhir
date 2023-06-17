@@ -356,7 +356,10 @@ def kirim_data(users):
 @userTokenAuth
 def verifikasi(users):
     status = request.args.get('status')
-    if status == 'menunggu':
+    if status is None:
+        # Jika status tidak ada atau null
+        return render_template('verifikasi_data.html', status='Null')
+    elif status == 'menunggu':
         return render_template('verifikasi_data.html', status='Menunggu')
     elif status == 'diterima':
         return render_template('verifikasi_data.html', status='Diterima')

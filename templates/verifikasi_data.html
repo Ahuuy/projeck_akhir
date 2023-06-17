@@ -96,7 +96,11 @@
                         <i class="fa fa-times-circle status-icon ditolak text-danger"></i>
                         {% endif %}
                         <h1>Status Verifikasi: {{ status }}</h1>
-                        {% if status == 'Menunggu' %}
+                        {% if status == 'Null' %}
+                        <h3>Anda belum mendaftar sebagai calon santri
+                        </h3>
+
+                        {% elif status == 'Menunggu' %}
                         <h3>Terima kasih telah mendaftar di 
                             PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. 
                             Kami sedang memproses pendaftaran Anda.
