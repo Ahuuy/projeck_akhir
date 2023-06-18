@@ -440,6 +440,7 @@ def isi_pengumuman(admin):
 
 
 @app.route("/delete/<isipengumuman>")
+@adminTokenAuth
 def delete(isipengumuman):
     db.pengumuman.delete_one({"isipengumuman": isipengumuman})
 
@@ -447,12 +448,14 @@ def delete(isipengumuman):
 
 
 @app.route("/edit/<isipengumuman>")
+@adminTokenAuth
 def edit_data(isipengumuman):
     pengumumanadmin = db.pengumuman.find_one({"isipengumuman": isipengumuman})
     return render_template("editpengumuman.html", data=pengumumanadmin)
 
 
 @app.route("/update/<isipengumuman>", methods=["POST"])
+@adminTokenAuth
 def update_data(isipengumuman):
     tglpengumuman_baru = request.form["tglpengumuman"]
     isipengumuman_baru = request.form["isipengumuman"]
@@ -555,6 +558,7 @@ def edit_valid(admin):
     
 
 @app.route('/updatevalid', methods=['POST'])
+@adminTokenAuth
 def update_valid():
     user_id = request.args.get('id')  # Memperbarui untuk mengambil user_id dari argumen URL
     tanggal_ujian = request.form.get('tanggal_ujian')
@@ -586,7 +590,10 @@ def update_valid():
 
     return redirect(url_for('valid_data'))  # Redirect ke fungsi valid_data
 
-
+@app.route("/contact", methods=["GET", "POST"])
+@userTokenAuth
+def contact_us(users):
+    return render_template("contact.html", users=users)
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD

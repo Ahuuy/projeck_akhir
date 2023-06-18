@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi</title>
+    <title>Dashboard</title>
 
     <!-- Link Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,28 +24,69 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- Link FA -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-    <!-- Link CSS -->
-    <link href="{{ url_for('static', filename='pendaftaran.css') }}" rel="stylesheet" />
-    <script src="/static/pendaftaran.js"></script>
     <style>
-        .status-icon {
-            font-size: 48px;
-            /* Mengubah ukuran ikon */
-            margin-right: 10px;
-            vertical-align: middle;
-            /* Memposisikan ikon secara vertikal tengah */
+        * {
+            font-family: 'PT Sans', sans-serif;
         }
 
-        .verifikasi-content {
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c4343;
+        }
+
+        .navbar {
+            background-color: #255555;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 10);
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        .contact {
+            color: white;
+            padding-top: 50px;
+        }
+
+        .box {
+            border: 2px solid #ccc;
+            padding: 20px;
             text-align: center;
-            /* Memposisikan teks dan ikon ke tengah */
-            margin-top: 20px;
+            position: relative;
+            transition: background-color 0.3s ease;
+            height: auto;
         }
 
-        .verifikasi-content p {
-            margin-top: 10px;
+        .circle {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #1c4343;
+        }
+
+        .fa-icon {
+            font-size: 24px;
+        }
+
+        .circle:hover {
+            background-color: rgb(16, 135, 139);
+            color: white;
         }
     </style>
+
+
 </head>
 
 <body>
@@ -57,7 +98,6 @@
                 aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
 
             <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
                 <a class="navbar-brand col-lg-3 me-0" href="/dashboard">
@@ -107,45 +147,64 @@
     </nav>
     <!-- End navbar -->
 
-    <!-- Verifikasi -->
-    <section id="registrasi">
-        <div class="container">
-            <div class="card">
-                <div class="card-body px-5 py-5">
-                    <div class="verifikasi-content">
-                        {% for user in users %}
-                        {% if user.status == 'menunggu' %}
-                        <i class="fa fa-hourglass-start status-icon menunggu"></i>
-                        <h3>Terima kasih telah mendaftar di PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
-                            SHOLIHIN. Kami sedang memproses pendaftaran Anda. Mohon bersabar, tim kami sedang bekerja
-                            keras untuk memverifikasi informasi yang Anda berikan. Kami akan segera memberikan kabar
-                            terbaru secepatnya. Terima kasih atas pengertiannya.</h3>
-                        {% elif user.status == 'diterima' %}
-                        <i class="fa fa-check-circle status-icon diterima text-success"></i>
-                        <h3 style="margin-bottom: 30px;">Selamat! Pendaftaran Anda telah diterima dengan sukses di
-                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. Kami sangat antusias untuk
-                            menyambut Anda sebagai bagian dari pesantren kami. Terima kasih atas kepercayaan Anda kepada
-                            kami. Selamat bergabung dan nikmati perjalanan pendidikan yang penuh inspirasi bersama
-                            pesantren kami!</h3>
-                        <a href="/unduh-pdf" download class="btn btn-primary">Unduh Kartu Ujian</a>
-                        {% elif user.status == 'ditolak' %}
-                        <i class="fa fa-times-circle status-icon ditolak text-danger"></i>
-                        <h3>Maaf, pendaftaran Anda di PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN
-                            telah ditolak. Terima kasih atas partisipasi Anda dan upaya yang telah Anda lakukan. Kami
-                            menghargai minat Anda terhadap pesantren kami, meskipun saat ini pendaftaran Anda tidak
-                            dapat diterima. Jika Anda memiliki pertanyaan lebih lanjut atau ingin mencari informasi
-                            tambahan, jangan ragu untuk menghubungi kami. Terima kasih atas pengertian dan kesempatan
-                            yang diberikan.</h3>
-                        {% else %}
-                        <h3>Anda belum mendaftar sebagai calon santri</h3>
-                        {% endif %}
-                        {% endfor %}
+    <!-- Contact -->
+    <div class="container contact">
+        <div class="px-4 py-5 text-center">
+            <span class="display-6 fw-bold text-body-emphasis-white border-bottom">Contact</span>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="box">
+                    <div class="circle">
+                        <i class="fa fa-map-marker fa-icon"></i>
                     </div>
+                    <h3 class="mt-3 fw-bold">Alamat</h3>
+                    <p class="mt-3">Komplek Villa Mas Jalan Dr Harun 2 Gg H, Gg. Agus Salim 1, Kota Baru, Kec.
+                        Tanjungkarang Timur, Kota Bandar Lampung, Lampung 35121</p>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15888.050703319945!2d105.275471!3d-5.4150387!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40dbafadfad04f%3A0xf9979dc6e7e39685!2sPonpes%20Yatim%20Piatu%20%26%20Dhuafa%20Tahfidzul%20Qur&#39;an%20Riyadhus%20Sholihin!5e0!3m2!1sid!2sid!4v1687120055365!5m2!1sid!2sid"
+                        width="200" height="200" style="border: 1px;;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="box">
+                    <div class="circle">
+                        <i class="fa fa-mobile fa-icon"></i>
+                    </div>
+                    <h3 class="mt-3 fw-bold">No. Telepon</h3>
+                    <p class="mt-3">081289787021 (Ust. M Iqmal Zain, S.Pd)</p>
+                    <p class="mt-3">85609609620 (Ust. Suryanto)</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="mt-5 row">
+            <div class="col-sm-6">
+                <div class="box">
+                    <div class="circle">
+                        <i class="fa fa-envelope-o fa-icon"></i>
+                    </div>
+                    <h3 class="mt-3 fw-bold">Email</h3>
+                    <p class="mt-3">ppypd.riyadhussholihin@gmail.com</p>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- End Verifikasi-->
+    </div>
+
+    <!-- End contact -->
+
+    <!-- start footer -->
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-center align-items-center py-3 my-4 border-top">
+            <p class="text-center text-light">PPDB Online © PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS
+                SHOLIHIN - 2023 <a href="#"><i class="fa fa-long-arrow-up text-white"></i></a></p>
+        </footer>
+    </div>
+
+    <!-- end footer -->
+
 </body>
 
 </html>

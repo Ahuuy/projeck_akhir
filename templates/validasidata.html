@@ -56,7 +56,7 @@
             border-radius: 10px;
             background-color: white;
             margin-top: 100px;
-            width: 800px;
+            width: 900px;
             box-shadow: 0px 13px 9px 24px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -85,19 +85,19 @@
             </button>
 
             <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
-                <a class="navbar-brand col-lg-3 me-0" href="/">
+                <a class="navbar-brand col-lg-3 me-0" href="/home_admin">
                     <img src="{{ url_for('static', filename='logo.jpeg') }}" style="width: 45px; height:45px" />
                     <span class="fs-4 nav-font" style="font-weight:bold; color: white;">PPDB Santri</span>
                 </a>
                 <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="/home-admin">Home</a>
+                        <a class="nav-link" href="/home_admin">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/listpendaftar">Pendaftar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#validasi">Validasi Data</a>
+                        <a class="nav-link" href="/validasidata">Validasi Data</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/pengumumanadmin">Pengumuman</a>
@@ -111,7 +111,8 @@
                         class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
-                    <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                    <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"
+                                aria-hidden="true"></i>Logout</a>
                     </li>
                 </ul>
             </div>
@@ -130,11 +131,11 @@
                                 <div style="padding:8px 0;">
                                     <div class="table-responsive">
                                         <div class="row g-0">
-                                            <div class="col-sm-6 col-md-8">
+                                            <div class="text-center">
                                                 <h4>Validasi Data Calon Santri</h4>
                                             </div>
                                         </div>
-                                        <table class="table table-bordered table-striped dataTable text-center mx-auto">
+                                        <table class="table table-bordered table-striped dataTable text-center mx-auto mt-3">
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th class="col-sm-1">No</th>
@@ -142,7 +143,7 @@
                                                     <th class="col-sm-2">Tanggal Lahir</th>
                                                     <th class="col-sm-2">Jenis Kelamin</th>
                                                     <th>Status</th>
-                                                    <th>Detail Pendaftar</th>
+                                                    <th>Aksi</th>
 
                                             </thead>
                                             <tbody id="tbody-box">
@@ -155,15 +156,14 @@
                                                     <td class="text-center">{{ user.jenis_kelamin }}</td>
                                                     <td class="text-center">{{ user.status }}</td>
                                                     <td class="text-center">
-                                                        <button class="btn-primary"
-                                                            onclick="redirectToValidasi('{{ user._id }}')">Cek
+                                                        <button class="btn btn-outline-success flex-fill mr-2"
+                                                            onclick="redirectToValidasi('{{ user._id }}')"><i
+                                                                class="fa fa-info-circle" aria-hidden="true"></i> Cek
                                                             Detail</button>
-                                                    </td>
-                                                    <td>
                                                         <a type="button" class="btn btn-outline-warning flex-fill mr-2"
                                                             onclick="redirectToEditValid('{{ user._id }}')">
                                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                                            Update Data
+                                                            Update
                                                         </a>
                                                     </td>
                                                 </tr>
