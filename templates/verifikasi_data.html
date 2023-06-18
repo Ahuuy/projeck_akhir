@@ -108,52 +108,22 @@
             <div class="card">
                 <div class="card-body px-5 py-5">
                     <div class="verifikasi-content">
-                        {% if status == 'Menunggu' %}
-                        <i class="fa fa-hourglass-start status-icon menunggu"></i>
-                        {% elif status == 'Diterima' %}
-                        <i class="fa fa-check-circle status-icon diterima text-success"></i>
-                        {% elif status == 'Ditolak' %}
-                        <i class="fa fa-times-circle status-icon ditolak text-danger"></i>
-                        {% endif %}
-                        <h1>Status Verifikasi: {{ status }}</h1>
-                        {% if status == 'Null' %}
-                        <h3>Anda belum mendaftar sebagai calon santri
-                        </h3>
-
-                        {% elif status == 'Menunggu' %}
-                        <h3>Terima kasih telah mendaftar di 
-                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. 
-                            Kami sedang memproses pendaftaran Anda.
-                            Mohon bersabar, tim kami sedang bekerja keras untuk 
-                            memverifikasi informasi yang Anda berikan.
-                            Kami akan segera memberikan kabar terbaru secepatnya. 
-                            Terima kasih atas pengertiannya
-                        </h3>
-
-                        {% elif status == 'Diterima' %}
-                        <h3 style="margin-bottom: 30px;">Selamat! Pendaftaran Anda telah diterima dengan sukses di 
-                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. 
-                            Kami sangat antusias untuk menyambut Anda sebagai bagian 
-                            dari pesantren kami. Terima kasih atas kepercayaan Anda kepada kami.
-                            Selamat bergabung dan nikmati perjalanan pendidikan yang penuh inspirasi 
-                            bersama pesantren kami!
-                        </h3>
-                        <a href="/unduh-pdf" download class="btn btn-primary">
-                            Unduh Kartu Ujian
-                        </a>
-
-                        {% elif status == 'Ditolak' %}
-                        <h3>Maaf, pendaftaran Anda di 
-                            PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN telah ditolak.
-                            Terima kasih atas partisipasi Anda dan upaya yang telah Anda lakukan.
-                            Kami menghargai minat Anda terhadap pesantren kami, 
-                            meskipun saat ini pendaftaran Anda tidak dapat diterima.
-                            Jika Anda memiliki pertanyaan lebih lanjut
-                            atau ingin mencari informasi tambahan, jangan ragu untuk menghubungi kami.
-                            Terima kasih atas pengertian dan kesempatan yang diberikan.
-                        </h3>
-                        {% endif %}
-                    </div>
+                        {% for user in users %}
+                            {% if user.status == 'menunggu' %}
+                                <i class="fa fa-hourglass-start status-icon menunggu"></i>
+                                <h3>Terima kasih telah mendaftar di PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. Kami sedang memproses pendaftaran Anda. Mohon bersabar, tim kami sedang bekerja keras untuk memverifikasi informasi yang Anda berikan. Kami akan segera memberikan kabar terbaru secepatnya. Terima kasih atas pengertiannya.</h3>
+                            {% elif user.status == 'diterima' %}
+                                <i class="fa fa-check-circle status-icon diterima text-success"></i>
+                                <h3 style="margin-bottom: 30px;">Selamat! Pendaftaran Anda telah diterima dengan sukses di PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN. Kami sangat antusias untuk menyambut Anda sebagai bagian dari pesantren kami. Terima kasih atas kepercayaan Anda kepada kami. Selamat bergabung dan nikmati perjalanan pendidikan yang penuh inspirasi bersama pesantren kami!</h3>
+                                <a href="/unduh-pdf" download class="btn btn-primary">Unduh Kartu Ujian</a>
+                            {% elif user.status == 'ditolak' %}
+                                <i class="fa fa-times-circle status-icon ditolak text-danger"></i>
+                                <h3>Maaf, pendaftaran Anda di PONPES YATIM PIATU & DHUAFA TAHFIDZUL QUR'AN RIYADHUS SHOLIHIN telah ditolak. Terima kasih atas partisipasi Anda dan upaya yang telah Anda lakukan. Kami menghargai minat Anda terhadap pesantren kami, meskipun saat ini pendaftaran Anda tidak dapat diterima. Jika Anda memiliki pertanyaan lebih lanjut atau ingin mencari informasi tambahan, jangan ragu untuk menghubungi kami. Terima kasih atas pengertian dan kesempatan yang diberikan.</h3>
+                            {% else %}
+                                <h3>Anda belum mendaftar sebagai calon santri</h3>
+                            {% endif %}
+                        {% endfor %}
+                    </div>                      
                 </div>
             </div>
         </div>

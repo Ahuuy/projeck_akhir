@@ -363,22 +363,9 @@ def kirim_data(users):
 @app.route("/verifikasi")
 @userTokenAuth
 def verifikasi(users):
-    data = db.users.find_one()
-    if data is None:
-        # Jika status tidak ada atau null
-        return render_template('verifikasi_data.html', status='Null', users=users)
-    else:
-        status = data.get('status')
-        if status is None:
-            return render_template('verifikasi_data.html', status='Null', users=users)
-        elif status == 'menunggu':
-            return render_template('verifikasi_data.html', status='Menunggu', users=users)
-        elif status == 'diterima':
-            return render_template('verifikasi_data.html', status='Diterima', users=users)
-        elif status == 'ditolak':
-            return render_template('verifikasi_data.html', status='Ditolak', users=users)
-        else:
-            return 'Status tidak valid'
+    
+    return render_template("verifikasi_data.html", users=users)
+
     
 @app.route("/unduh-pdf", methods=['GET'])
 @userTokenAuth
@@ -587,6 +574,7 @@ def update_valid():
     db.users.update_one(filter_query, update_query)
 
     return 'Data berhasil diperbarui di MongoDB.'
+
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
     app.run("0.0.0.0", port=5000, debug=True)
