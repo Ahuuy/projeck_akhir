@@ -122,43 +122,43 @@
                         <div class="table-responsive">
                             <h4 class="d-flex justify-content-Left">Halaman Update Data Validasi Calon Santri</h4>
                             <div class="mb-3">
-                                <label class="form-label">Nama Lengkap:</label>
-                                <input type="date" class="form-control" id="first_name" name="first_name" value=""
-                                    readonly>
+                                <label class="form-label">Nama Lengkap: {{ user.nama_lengkap }}</label>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Tanggal Lahir:</label>
-                                <textarea class="form-control" id="isipengumuman" name="isipengumuman" value=""
-                                    readonly></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="jk" class="form-label">Jenis Kelamin:</label>
-                                <input type="text" class="form-control" id="jenis_kelamin" name="jenis_kelamin" value=""
-                                    readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="birthdate" class="form-label">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="birthdate" value="" readonly>
-                            </div>
-                            <div class="mb-3">  <!-- Nanti dokumennya di buat bisa download yg udh di upload itu-->
-                                <label for="foto" class="form-label">Dokumen</label>
-                                <input class="form-control" type="file" id="foto" name="foto" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="validasi" class="form-label">Status Validasi</label>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option selected>-- Pilih Status Validasi --</option>
-                                    <option value="1">Tervalidasi</option>
-                                    <option value="2">Gagal Validasi</option>
-                                </select>
-                            </div>
-                            <div class="d-flex col-md-6">
-                                <button type="submit" class="btn btn-success flex-fill"
-                                    id="btnupdate">Update</button>&nbsp
-                                <a type="button" class="btn btn-outline-secondary flex-fill "
-                                    href="/validasidata">Batal</a>
-                            </div>
-                            <!-- </form> -->
+                            <form action="/updatevalid" method="POST">
+                                <div class="col">
+                                    <label for="birthdate" class="form-label">Tanggal Ujian</label>
+                                    <input type="date" class="form-control" id="tanggal_ujian" name="tanggal_ujian">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nama-lengkap" class="form-label">Tempat Ujian</label>
+                                    <input type="text" class="form-control" id="nama-lengkap" name="tempat_ujian"
+                                        placeholder="Contoh : Gedung A" required>
+                                </div>
+                                <div class="col">
+                                    <label for="birthdate" class="form-label">Tanggal Wawancara </label>
+                                    <input type="date" class="form-control" id="tanggal_wawancara"
+                                        name="tanggal_wawancara">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nama-lengkap" class="form-label">Tempat Wawancara</label>
+                                    <input type="text" class="form-control" id="tempat_wawancara"
+                                        name="tempat_wawancara" placeholder="Contoh: Gedung B" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="validasi" class="form-label">Status Validasi</label>
+                                    <select class="form-select" aria-label="Default select example" name="status">
+                                        <option selected>-- Pilih Status Validasi --</option>
+                                        <option value="diterima">Tervalidasi</option>
+                                        <option value="ditolak">Gagal Validasi</option>
+                                    </select>
+                                </div>
+                                <div class="d-flex col-md-6">
+                                    <button type="submit" class="btn btn-success flex-fill"
+                                        id="btnupdate">Update</button>&nbsp
+                                    <a type="button" class="btn btn-outline-secondary flex-fill "
+                                        href="/validasidata">Batal</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

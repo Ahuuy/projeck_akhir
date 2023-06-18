@@ -161,11 +161,11 @@
                 </tr>
                 <tr>
                     <td><strong>Jadwal Ujian</strong></td>
-                    <td>: 25 Juli 2023 (Di Kelas A)</td>
+                    <td>: {{ user.tanggal_ujian}} ({{ user.tempat_ujian }})</td>
                 </tr>
                 <tr>
                     <td><strong>Jadwal Wawancara</strong></td>
-                    <td>: 25 Juli 2024 (Di Kelas B)</td>
+                    <td>: {{ user.tanggal_wawancara }} ({{ user.tempat_wawancara }})</td>
                 </tr>
                 {% endfor %}
             </table>

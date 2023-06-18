@@ -65,6 +65,10 @@
             var url = "/validasi?id=" + userId;
             window.location.href = url;
         }
+        function redirectToEditValid(userId) {
+            var url = "/editvalid?id=" + userId;
+            window.location.href = url;
+        }
     </script>
 
 
@@ -157,7 +161,7 @@
                                                     </td>
                                                     <td>
                                                         <a type="button" class="btn btn-outline-warning flex-fill mr-2"
-                                                            href="/editvalid/{{ user.id }}">
+                                                            onclick="redirectToEditValid('{{ user._id }}')">
                                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                             Update Data
                                                         </a>

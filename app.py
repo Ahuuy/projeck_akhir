@@ -355,18 +355,22 @@ def kirim_data(users):
 @app.route("/verifikasi")
 @userTokenAuth
 def verifikasi(users):
-    status = request.args.get('status')
-    if status is None:
+    data = db.users.find_one()
+    if data is None:
         # Jika status tidak ada atau null
         return render_template('verifikasi_data.html', status='Null')
-    elif status == 'menunggu':
-        return render_template('verifikasi_data.html', status='Menunggu')
-    elif status == 'diterima':
-        return render_template('verifikasi_data.html', status='Diterima')
-    elif status == 'ditolak':
-        return render_template('verifikasi_data.html', status='Ditolak')
     else:
-        return 'Status tidak valid'
+        status = data.get('status')
+        if status is None:
+            return render_template('verifikasi_data.html', status='Null')
+        elif status == 'menunggu':
+            return render_template('verifikasi_data.html', status='Menunggu')
+        elif status == 'diterima':
+            return render_template('verifikasi_data.html', status='Diterima')
+        elif status == 'ditolak':
+            return render_template('verifikasi_data.html', status='Ditolak')
+        else:
+            return 'Status tidak valid'
     
 @app.route("/unduh-pdf", methods=['GET'])
 @userTokenAuth
@@ -485,14 +489,16 @@ def list_pendaftar(admin):
 
 #validasi Data Calon Santri
 @app.route("/validasidata")
-def valid_data():
+@adminTokenAuth
+def valid_data(admin):
     users = db.users.find()
     return render_template('validasidata.html', users=users)
 
 
 
 @app.route('/validasi', methods=['GET'])
-def validasi():
+@adminTokenAuth
+def validasi(admin):
     # Mendapatkan ID user dari parameter URL
     user_id = request.args.get('id')
 
@@ -541,10 +547,37 @@ def get_user_from_mongodb(user_id):
     return user
 
 
-@app.route("/editvalid")
-def edit_valid():
-    return render_template("editvalidasidata.html")
+@app.route("/editvalid", methods=["GET", "POST"])
+@adminTokenAuth
+def edit_valid(admin):
+    user_id = request.args.get('id')
+    user = get_user_from_mongodb(user_id)  # Mendapatkan data pengguna dari MongoDB berdasarkan ID
+    return render_template("editvalidasidata.html", user=user)
+    
 
+@app.route('/updatevalid', methods=['POST'])
+def update_valid():
+    user_id = request.args.get('id')
+    tanggal_ujian = request.form.get('tanggal_ujian')
+    tempat_ujian = request.form.get('tempat_ujian')
+    tanggal_wawancara = request.form.get('tanggal_wawancara')
+    tempat_wawancara = request.form.get('tempat_wawancara')
+    status_validasi = request.form.get('status')
+
+    # Perbarui data di MongoDB berdasarkan user_id
+    filter_query = {'user_id': user_id}
+    update_query = {
+        '$set': {
+            'tanggal_ujian': tanggal_ujian,
+            'tempat_ujian': tempat_ujian,
+            'tanggal_wawancara': tanggal_wawancara,
+            'tempat_wawancara': tempat_wawancara,
+            'status': status_validasi
+        }
+    }
+    db.users.update_one(filter_query, update_query)
+
+    return 'Data berhasil diperbarui di MongoDB.'
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
     app.run("0.0.0.0", port=5000, debug=True)
