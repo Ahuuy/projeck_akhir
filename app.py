@@ -547,21 +547,32 @@ def get_user_from_mongodb(user_id):
 @adminTokenAuth
 def edit_valid(admin):
     user_id = request.args.get('id')
-    user = get_user_from_mongodb(user_id)  # Mendapatkan data pengguna dari MongoDB berdasarkan ID
-    return render_template("editvalidasidata.html", user=user)
+    print("user_id:", user_id)  # Add this line to check the value
+
+    user = get_user_from_mongodb(user_id)
+    return render_template("editvalidasidata.html", user=user, user_id=user_id)
+
     
 
 @app.route('/updatevalid', methods=['POST'])
 def update_valid():
-    user_id = request.args.get('id')
+    user_id = request.args.get('id')  # Memperbarui untuk mengambil user_id dari argumen URL
     tanggal_ujian = request.form.get('tanggal_ujian')
     tempat_ujian = request.form.get('tempat_ujian')
     tanggal_wawancara = request.form.get('tanggal_wawancara')
     tempat_wawancara = request.form.get('tempat_wawancara')
     status_validasi = request.form.get('status')
 
-    # Perbarui data di MongoDB berdasarkan user_id
-    filter_query = {'user_id': user_id}
+     # Print the received form data for debugging
+    print("User ID:", user_id)
+    print("Tanggal Ujian:", tanggal_ujian)
+    print("Tempat Ujian:", tempat_ujian)
+    print("Tanggal Wawancara:", tanggal_wawancara)
+    print("Tempat Wawancara:", tempat_wawancara)
+    print("Status Validasi:", status_validasi)
+
+     # Perbarui data di MongoDB berdasarkan user_id
+    filter_query = {'_id': ObjectId(user_id)}  # Use '_id' instead of 'user_id'
     update_query = {
         '$set': {
             'tanggal_ujian': tanggal_ujian,
@@ -569,11 +580,13 @@ def update_valid():
             'tanggal_wawancara': tanggal_wawancara,
             'tempat_wawancara': tempat_wawancara,
             'status': status_validasi
-        }
+        }   
     }
     db.users.update_one(filter_query, update_query)
 
     return 'Data berhasil diperbarui di MongoDB.'
+
+
 
 if __name__ == "__main__":
     # DEBUG is SET to TRUE. CHANGE FOR PROD
