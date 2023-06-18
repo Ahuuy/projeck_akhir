@@ -35,7 +35,14 @@
         }
         $(document).ready(function () {
             $('#btnsave').click(function () {
-                Swal.fire('Data Berhasil di Simpan!', '', 'success');
+                var tglpengumuman = $("#tglpengumuman").val();
+                var isipengumuman = $("#isipengumuman").val();
+
+                if (tglpengumuman && isipengumuman) {
+                    Swal.fire('Data Berhasil di Simpan!', '', 'success');
+                } else {
+                    Swal.fire('Mohon lengkapi tanggal dan isi pengumuman!', '', 'error');
+                }
             });
         });
     </script>
