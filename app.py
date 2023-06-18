@@ -73,6 +73,14 @@ def adminTokenAuth(view_func):
 
     return decorator
 
+# Route untuk logout
+@app.route('/logout')
+def logout():
+    # Hapus token dari cookie
+    response = make_response(redirect(url_for('login')))
+    response.set_cookie('token', '', expires=0)
+    return response
+
 #UNTUK HALAMAN LANDING PAGE
 @app.route("/", methods=["GET", "POST"])
 def home():
