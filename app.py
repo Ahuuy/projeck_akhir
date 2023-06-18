@@ -277,7 +277,7 @@ def tambah_profil(users):
 @app.route("/pendaftaran", methods=['GET', 'POST'])
 @userTokenAuth
 def pendaftaran(users):
-    return render_template('pendaftaran.html')
+    return render_template('pendaftaran.html', users=users)
 
 def fetchProvinces():
     api_key = '61f11a92448099f51314a6558e627d9d6adb58b7937e314da7c276ff6b7a7614'
@@ -366,17 +366,17 @@ def verifikasi(users):
     data = db.users.find_one()
     if data is None:
         # Jika status tidak ada atau null
-        return render_template('verifikasi_data.html', status='Null')
+        return render_template('verifikasi_data.html', status='Null', users=users)
     else:
         status = data.get('status')
         if status is None:
-            return render_template('verifikasi_data.html', status='Null')
+            return render_template('verifikasi_data.html', status='Null', users=users)
         elif status == 'menunggu':
-            return render_template('verifikasi_data.html', status='Menunggu')
+            return render_template('verifikasi_data.html', status='Menunggu', users=users)
         elif status == 'diterima':
-            return render_template('verifikasi_data.html', status='Diterima')
+            return render_template('verifikasi_data.html', status='Diterima', users=users)
         elif status == 'ditolak':
-            return render_template('verifikasi_data.html', status='Ditolak')
+            return render_template('verifikasi_data.html', status='Ditolak', users=users)
         else:
             return 'Status tidak valid'
     
@@ -484,9 +484,10 @@ def update_data(isipengumuman):
 
 
 @app.route("/pengumumanuser")
-def pengumumanuser_():
+@userTokenAuth
+def pengumumanuser_(users):
     data = db.pengumuman.find()
-    return render_template("pengumumanuser.html", pengumumanuser=data)
+    return render_template("pengumumanuser.html", pengumumanuser=data, users=users)
 
 #list pendaftar
 @app.route('/listpendaftar')

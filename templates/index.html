@@ -92,13 +92,21 @@
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
                     data-bs-display="static" aria-expanded="false">
+                    {% for user in users %}
+                    {% if user.foto %}
+                    <img src="{{ user.foto }}" alt="User Photo" class="dropdown-toggle-image rounded-5"
+                        style="width: 30px; height: 30px;">
+                    {% else %}
                     <img src="static/profile_pics/profile_placeholder.png" alt="User Photo"
-                        class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
+                        class="dropdown-toggle-image rounded-5" style="width: 30px; height: 30px;">
+                    {% endif %}
+                    {% endfor %}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
                     <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"
                                 aria-hidden="true"></i>Profile</a></li>
-                    <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                    <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"
+                                aria-hidden="true"></i>Logout</a>
                     </li>
                 </ul>
             </div>

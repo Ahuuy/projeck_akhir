@@ -69,16 +69,16 @@
                 </a>
                 <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Home</a>
+                        <a class="nav-link" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pendaftaran">Pendaftaran</a>
+                        <a class="nav-link" href="/listpendaftar">Pendaftar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pengumumanuser">Pengumuman</a>
+                        <a class="nav-link" href="/validasi">Validasi Data</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/verifikasi?status=menunggu">Status Verifikasi</a>
+                        <a class="nav-link" href="/pengumumanadmin">Pengumuman</a>
                     </li>
                 </ul>
             </div>
@@ -89,9 +89,8 @@
                         class="dropdown-toggle-image rounded-5" style="width: 30px; height :30px; ">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
-                    <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"
-                                aria-hidden="true"></i>Profile</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                    <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"
+                                aria-hidden="true"></i>Logout</a>
                     </li>
                 </ul>
             </div>
@@ -151,7 +150,8 @@
                         </tr>
                         <tr>
                             <td>Dokumen</td>
-                            <td><button class="btn btn-primary" onclick="unduhDokumen('{{ user.nama_lengkap }}')">Unduh Dokumen</button></td>
+                            <td><button class="btn btn-primary" onclick="unduhDokumen('{{ user.nama_lengkap }}')">Unduh
+                                    Dokumen</button></td>
                         </tr>
                     </table>
 
