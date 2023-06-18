@@ -584,7 +584,7 @@ def update_valid():
     }
     db.users.update_one(filter_query, update_query)
 
-    return 'Data berhasil diperbarui di MongoDB.'
+    return redirect(url_for('valid_data'))  # Redirect ke fungsi valid_data
 
 
 

@@ -30,7 +30,17 @@
     <script>
         $(document).ready(function () {
             $('#btnupdate').click(function () {
-                Swal.fire('Data Berhasil di Update!', '', 'success');
+                var tanggalUjian = $('#tanggal_ujian').val();
+                var tempatUjian = $('#nama-lengkap').val();
+                var tanggalWawancara = $('#tanggal_wawancara').val();
+                var tempatWawancara = $('#tempat_wawancara').val();
+                var status = $('select[name="status"]').val();
+
+                if (!tanggalUjian || !tempatUjian || !tanggalWawancara || !tempatWawancara || status === "-- Pilih Status Validasi --") {
+                    Swal.fire('Mohon lengkapi semua data terlebih dahulu!', '', 'warning');
+                } else {
+                    Swal.fire('Data Berhasil di Update!', '', 'success');
+                }
             });
         });
 
