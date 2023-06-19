@@ -5,11 +5,13 @@ from werkzeug.utils import secure_filename
 from jwt.exceptions import ExpiredSignatureError, DecodeError
 from functools import wraps
 from bson.objectid import ObjectId
+from os.path import join, dirname
+from dotenv import load_dotenv
 import jwt
 import hashlib
 import os
 import requests
-import weasyprint
+# import weasyprint
 
 app = Flask(__name__)
 
@@ -17,13 +19,17 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["UPLOAD_FOLDER"] = "./static/profile_pics"
 app.config['UPLOAD_FOLDER'] = 'static/dokumen_calon_santri'
 
-SECRET_KEY = "secret_key"
-TOKEN_KEY = "KELOMPOK1"
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
-client = MongoClient(
-    "mongodb://grup4kelompok1:kelompok1@ac-pgwmogi-shard-00-00.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-01.fl0gdtc.mongodb.net:27017,ac-pgwmogi-shard-00-02.fl0gdtc.mongodb.net:27017/?ssl=true&replicaSet=atlas-jhyhsx-shard-0&authSource=admin&retryWrites=true&w=majority"
-)
-db = client.dbTester
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+SECRET_KEY = os.environ.get("SECRET_KEY")
+TOKEN_KEY = os.environ.get("TOKEN_KEY")
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
+
 
 # Untuk Fungsi autentikasi user
 def userTokenAuth(view_func):
@@ -367,39 +373,39 @@ def verifikasi(users):
     return render_template("verifikasi_data.html", users=users)
 
     
-@app.route("/unduh-pdf", methods=['GET'])
-@userTokenAuth
-def unduh_pdf(users):
-    # Mendapatkan path direktori "Downloads" pengguna
-    download_dir = os.path.expanduser("~/Downloads")
+# @app.route("/unduh-pdf", methods=['GET'])
+# @userTokenAuth
+# def unduh_pdf(users):
+#     # Mendapatkan path direktori "Downloads" pengguna
+#     download_dir = os.path.expanduser("~/Downloads")
 
-    if users:
-        user = users[0]  # Ambil pengguna pertama dari daftar pengguna
-        nama_lengkap = user.get('nama_lengkap')
+#     if users:
+#         user = users[0]  # Ambil pengguna pertama dari daftar pengguna
+#         nama_lengkap = user.get('nama_lengkap')
 
-        if nama_lengkap:
-            # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
-            file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
+#         if nama_lengkap:
+#             # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
+#             file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
 
-            # Menentukan path lengkap file PDF tujuan
-            file_path = os.path.join(download_dir, file_name)
+#             # Menentukan path lengkap file PDF tujuan
+#             file_path = os.path.join(download_dir, file_name)
 
-            # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-            rendered_template = render_template("layout_kartu_ujian.html", users=users)
+#             # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+#             rendered_template = render_template("layout_kartu_ujian.html", users=users)
 
-            # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
-            pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
-                stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
-            )
+#             # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+#             pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+#                 stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+#             )
 
-            # Simpan file PDF ke path tujuan
-            with open(file_path, 'wb') as file:
-                file.write(pdf)
+#             # Simpan file PDF ke path tujuan
+#             with open(file_path, 'wb') as file:
+#                 file.write(pdf)
 
-            # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
-            return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
+#             # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
+#             return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
 
-    return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
+#     return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
 
 
     
