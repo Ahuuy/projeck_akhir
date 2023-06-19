@@ -6,6 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+
+    <meta property="og:title" content="PPDB Online" />
+    <meta property="og:description" content="PPDB Online" />
+    <meta property="og:image" content="{{url_for('static', filename='logo.jpeg')}}" />
+    <link rel="shortcut icon" href="{{url_for('static', filename='logo.jpeg')}}" type="image/x-icon" />
+    <link rel="icon" href="{{url_for('static', filename='logo.jpeg')}}" type="image/x-icon" />
     <!-- Link Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,6 +48,11 @@
 
             $("#profile-image-input").change(uploadProfileImage);
 
+            $(document).ready(function () {
+                $("#back-button").click(function () {
+                    window.history.back();
+                });
+            });
 
             // save profil
             $('form').submit(function (e) {
@@ -193,9 +204,12 @@
                                 <div class="mb-3">
                                     <label for="gender" class="form-label">Jenis Kelamin</label>
                                     <select class="form-select" id="gender">
-                                        <option value="laki-laki" {% if profile.jenis_kelamin == 'laki-laki' %}selected{% endif %}>Laki-laki</option>
-                                        <option value="perempuan" {% if profile.jenis_kelamin == 'perempuan' %}selected{% endif %}>Perempuan</option>
-                                        <option value="other" {% if profile.jenis_kelamin == 'other' %}selected{% endif %}>Lainnya</option>
+                                        <option value="laki-laki" {% if profile.jenis_kelamin=='laki-laki' %}selected{%
+                                            endif %}>Laki-laki</option>
+                                        <option value="perempuan" {% if profile.jenis_kelamin=='perempuan' %}selected{%
+                                            endif %}>Perempuan</option>
+                                        <option value="other" {% if profile.jenis_kelamin=='other' %}selected{% endif
+                                            %}>Lainnya</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -210,12 +224,16 @@
                                     </div>
                                     <div class="col">
                                         <label for="birthdate" class="form-label">Tanggal Lahir</label>
-                                        <input type="date" class="form-control" id="birthdate" value="{{ profile.tanggal_lahir }}">
+                                        <input type="date" class="form-control" id="birthdate"
+                                            value="{{ profile.tanggal_lahir }}">
                                     </div>
                                 </div>
                                 <div class="mb-3 text-end">
                                     <button type="submit" class="btn btn-primary" id="save-profile-form">
                                         <i class="fa-solid fa-floppy-disk"></i> Simpan
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="back-button">
+                                        Kembali
                                     </button>
                                 </div>
                             </form>
@@ -225,8 +243,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
 </body>
 
 </html>
