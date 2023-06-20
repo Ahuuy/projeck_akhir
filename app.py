@@ -7,11 +7,13 @@ from functools import wraps
 from bson.objectid import ObjectId
 from os.path import join, dirname
 from dotenv import load_dotenv
+from pdfcrowd import HtmlToPdfClient, Error
 import jwt
 import hashlib
 import os
 import requests
-import weasyprint
+import sys
+import pdfcrowd
 
 app = Flask(__name__)
 
@@ -376,36 +378,41 @@ def verifikasi(users):
 @app.route("/unduh-pdf", methods=['GET'])
 @userTokenAuth
 def unduh_pdf(users):
-    # Mendapatkan path direktori "Downloads" pengguna
-    download_dir = os.path.expanduser("~/Downloads")
+    try:
+        # create the API client instance
+        client = pdfcrowd.HtmlToPdfClient('Farhanjul01', '478f052f138a7722623a659278806866')
 
-    if users:
-        user = users[0]  # Ambil pengguna pertama dari daftar pengguna
-        nama_lengkap = user.get('nama_lengkap')
+        # Render the Jinja template with the users variable
+        rendered_template = render_template('layout_kartu_ujian.html', users=users)
 
-        if nama_lengkap:
-            # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
-            file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
+        # Folder unduhan default pada komputer pengguna
+        download_folder = os.path.expanduser('~/Downloads')
 
-            # Menentukan path lengkap file PDF tujuan
-            file_path = os.path.join(download_dir, file_name)
+        # Nama file output PDF
+        output_file = 'Kartu Ujian.pdf'
 
-            # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
-            rendered_template = render_template("layout_kartu_ujian.html", users=users)
+        # Path lengkap file output
+        output_path = os.path.join(download_folder, output_file)
 
-            # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
-            pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
-                stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
-            )
+        # Mengkonversi file HTML menjadi file PDF menggunakan Pdfcrowd
+        client.convertStringToFile(rendered_template, output_path)
 
-            # Simpan file PDF ke path tujuan
-            with open(file_path, 'wb') as file:
-                file.write(pdf)
+        print(f"File PDF '{output_path}' telah berhasil dibuat.")
 
-            # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
-            return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
+        # Return the PDF file as a response
+        return send_file(output_path, as_attachment=True, download_name=output_file)
 
-    return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
+    except pdfcrowd.Error as why:
+        # report the error
+        sys.stderr.write('Pdfcrowd Error: {}\n'.format(why))
+
+        # rethrow or handle the exception
+        raise
+
+
+
+
+
 
 
     
@@ -447,7 +454,7 @@ def isi_pengumuman(admin):
 
 @app.route("/delete/<isipengumuman>")
 @adminTokenAuth
-def delete(isipengumuman):
+def delete(admin, isipengumuman):
     db.pengumuman.delete_one({"isipengumuman": isipengumuman})
 
     return redirect("/pengumumanadmin")
@@ -455,14 +462,14 @@ def delete(isipengumuman):
 
 @app.route("/edit/<isipengumuman>")
 @adminTokenAuth
-def edit_data(isipengumuman):
+def edit_data(admin, isipengumuman):
     pengumumanadmin = db.pengumuman.find_one({"isipengumuman": isipengumuman})
     return render_template("editpengumuman.html", data=pengumumanadmin)
 
 
 @app.route("/update/<isipengumuman>", methods=["POST"])
 @adminTokenAuth
-def update_data(isipengumuman):
+def update_data(admin, isipengumuman):
     tglpengumuman_baru = request.form["tglpengumuman"]
     isipengumuman_baru = request.form["isipengumuman"]
     link_baru = request.form["link"]
