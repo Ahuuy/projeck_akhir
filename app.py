@@ -385,29 +385,32 @@ def unduh_pdf(users):
         # Render the Jinja template with the users variable
         rendered_template = render_template('layout_kartu_ujian.html', users=users)
 
-        # Folder unduhan default pada komputer pengguna
-        download_folder = os.path.expanduser('~/Downloads')
+        # Set the path for the output file
+        output_folder = os.path.join(app.root_path, 'unduhan')
+        os.makedirs(output_folder, exist_ok=True)
 
-        # Nama file output PDF
+        # Name of the output PDF file
         output_file = 'Kartu Ujian.pdf'
 
-        # Path lengkap file output
-        output_path = os.path.join(download_folder, output_file)
+        # Full path of the output file
+        output_path = os.path.join(output_folder, output_file)
 
-        # Mengkonversi file HTML menjadi file PDF menggunakan Pdfcrowd
+        # Convert the HTML file to PDF using Pdfcrowd
         client.convertStringToFile(rendered_template, output_path)
 
-        print(f"File PDF '{output_path}' telah berhasil dibuat.")
+        print(f"PDF file '{output_file}' has been successfully created.")
 
         # Return the PDF file as a response
-        return send_file(output_path, as_attachment=True, download_name=output_file)
+        return send_file(output_path, as_attachment=True, attachment_filename=output_file)
 
-    except pdfcrowd.Error as why:
-        # report the error
-        sys.stderr.write('Pdfcrowd Error: {}\n'.format(why))
+    except pdfcrowd.Error as e:
+        # Report the error
+        sys.stderr.write('Pdfcrowd Error: {}\n'.format(e))
 
-        # rethrow or handle the exception
+        # Rethrow or handle the exception
         raise
+
+
 
 
 
