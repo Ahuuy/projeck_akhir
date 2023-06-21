@@ -13,7 +13,7 @@ import hashlib
 import os
 import requests
 import sys
-import pdfcrowd
+import weasyprint
 
 app = Flask(__name__)
 
@@ -378,38 +378,36 @@ def verifikasi(users):
 @app.route("/unduh-pdf", methods=['GET'])
 @userTokenAuth
 def unduh_pdf(users):
-    try:
-        # create the API client instance
-        client = pdfcrowd.HtmlToPdfClient('Farhanjul01', '478f052f138a7722623a659278806866')
+    # Mendapatkan path direktori "Downloads" pengguna
+    download_dir = os.path.expanduser("~/Downloads")
 
-        # Render the Jinja template with the users variable
-        rendered_template = render_template('layout_kartu_ujian.html', users=users)
+    if users:
+        user = users[0]  # Ambil pengguna pertama dari daftar pengguna
+        nama_lengkap = user.get('nama_lengkap')
 
-        # Set the path for the output file
-        output_folder = os.path.join(app.root_path, 'unduhan')
-        os.makedirs(output_folder, exist_ok=True)
+        if nama_lengkap:
+            # Menentukan nama file PDF tujuan dengan menggunakan nama lengkap pengguna
+            file_name = f"{nama_lengkap.replace(' ', '_')}_kartu_ujian.pdf"  # Ubah spasi menjadi underscore
 
-        # Name of the output PDF file
-        output_file = 'Kartu Ujian.pdf'
+            # Menentukan path lengkap file PDF tujuan
+            file_path = os.path.join(download_dir, file_name)
 
-        # Full path of the output file
-        output_path = os.path.join(output_folder, output_file)
+            # Render template HTML untuk file "layout_kartu_ujian.html" dengan gambar dari folder "static"
+            rendered_template = render_template("layout_kartu_ujian.html", users=users)
 
-        # Convert the HTML file to PDF using Pdfcrowd
-        client.convertStringToFile(rendered_template, output_path)
+            # Konversi HTML menjadi PDF menggunakan WeasyPrint dengan opsi konfigurasi untuk format landscape
+            pdf = weasyprint.HTML(string=rendered_template, base_url=request.host_url).write_pdf(
+                stylesheets=[weasyprint.CSS(string="@page { size: landscape; }")]
+            )
 
-        print(f"PDF file '{output_file}' has been successfully created.")
+            # Simpan file PDF ke path tujuan
+            with open(file_path, 'wb') as file:
+                file.write(pdf)
 
-        # Return the PDF file as a response
-        return send_file(output_path, as_attachment=True, attachment_filename=output_file)
+            # Kirim file PDF sebagai respons unduhan dengan menggunakan nama file yang sesuai
+            return send_from_directory(directory=download_dir, path=file_name, as_attachment=True)
 
-    except pdfcrowd.Error as e:
-        # Report the error
-        sys.stderr.write('Pdfcrowd Error: {}\n'.format(e))
-
-        # Rethrow or handle the exception
-        raise
-
+    return "Nama lengkap tidak tersedia atau pengguna tidak ditemukan."
 
 
 

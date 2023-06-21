@@ -114,6 +114,12 @@
                     <hr>
                     <table>
                         <tr>
+                            <td>Foto</td>
+                            <td>
+                                <img src="{{ user.foto or 'https://via.placeholder.com/300x400' }}" alt="User Image" class="img-fluid" width="300" height="400">
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Nama Lengkap</td>
                             <td>{{ user.nama_lengkap }}</td>
                         </tr>
@@ -160,6 +166,7 @@
                         </tr>
                     </table>
 
+                    <a type="button" class="btn btn-outline-secondary" href="/validasidata" style="display: block; margin: 3rem auto 0; text-align: center; width: fit-content;">Kembali</a>
                     <!-- ini data yang akan di kirim -->
 
                 </div>
